@@ -1,13 +1,13 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
-body {
+/* body {
   background-image: linear-gradient(79deg, #7439db, #c66fbc 48%, #f7944d
   );
   display: flex;
   min-height: 100vh;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .form-container {
   width: 360px;
