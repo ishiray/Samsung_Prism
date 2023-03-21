@@ -16,6 +16,10 @@ import DataTransfer from "./pages/DataTransfer";
 
 
 function Simulator() {
+  console.log(document.getElementById("main").className);
+  document.getElementById("main").classList.remove("auth");
+  document.getElementById("main").classList.add("simulator");
+  console.log(document.getElementById("main").className);
  
   return (
     <>
