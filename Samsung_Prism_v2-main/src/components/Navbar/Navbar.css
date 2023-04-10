@@ -7,7 +7,7 @@
 .icon {
   height: 1.2vw;
   width: 1.2vw;
-  position: absolute;
+  position: relative;
   top: 1.8rem;
   border: 1px black;
 }

@@ -1,4 +1,5 @@
 import iconImg from "./icon.png";
+import image10 from "./build.jpg";
 
 const IconArray = [
   {
@@ -48,7 +49,7 @@ const IconArray = [
   },
   {
     index: 10,
-    icon: iconImg,
+    icon: image10,
     alt: "xyz"
   },
   {

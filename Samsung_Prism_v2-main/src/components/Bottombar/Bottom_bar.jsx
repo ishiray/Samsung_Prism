@@ -9,7 +9,7 @@ export default function BottomBar() {
       style={{
         width: "100%",
         height: "40%",
-        position: "absolute",
+        position: "relative",
         bottom: "1px"
       }}
     >
