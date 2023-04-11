@@ -25,7 +25,7 @@ export default function BottomNav() {
               // href="/"
             >
               <button
-                style={{ border: 0, backgroundColor: "transparent" }}
+                style={{ border: 0, backgroundColor: "transparent" ,color:"black"}}
                 onClick={makeTrue}
               >
                 General Output
@@ -41,7 +41,7 @@ export default function BottomNav() {
               // href="/"
             >
               <button
-                style={{ border: 0, backgroundColor: "transparent" }}
+                style={{ border: 0, backgroundColor: "transparent" ,color:"black"}}
                 onClick={makeFalse}
               >
                 Symbol Text View
@@ -62,13 +62,13 @@ export default function BottomNav() {
           <li className="nav-item">
             <a
               className="nav-link active py-0"
-              style={{ backgroundColor: "transparent" }}
+              style={{ backgroundColor: "transparent" ,color:"black"}}
               // tabindex="-1"
               // aria-disabled="true"
               // href="/"
             >
               <button
-                style={{ border: 0, backgroundColor: "transparent" }}
+                style={{ border: 0, backgroundColor: "transparent" ,color:"black"}}
                 onClick={makeTrue}
               >
                 General Output
@@ -82,7 +82,7 @@ export default function BottomNav() {
               //  href="/"
             >
               <button
-                style={{ border: 0, backgroundColor: "transparent" }}
+                style={{ border: 0, backgroundColor: "transparent" ,color:"black"}}
                 onClick={makeFalse}
               >
                 Symbol Text View
