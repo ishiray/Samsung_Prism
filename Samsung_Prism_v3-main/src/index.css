@@ -101,3 +101,7 @@ button:disabled {
   width: 200px;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), -5px 4px 3px 0 rgba(62, 34, 52, 0.24);
 }
+
+body{
+  overflow: hidden;
+}
