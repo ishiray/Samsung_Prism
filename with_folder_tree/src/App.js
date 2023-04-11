@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
+//import "./index.css";
 import Registration from './registerPage.js';
 import Simulator from './Simulator.js';
 

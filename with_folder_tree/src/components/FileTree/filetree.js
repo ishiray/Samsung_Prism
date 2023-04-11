@@ -74,11 +74,11 @@ function FileTree(){
     return (
         <>
         <div>
-          <label htmlFor="fileInput">Choose a file:</label>
-          <input type="file" id="fileInput" webkitdirectory="" directory="" onChange={handleFileInputChange}/>
+          <label htmlFor="fileInput" style={{display: 'inline-block', marginLeft: '80%'}}>Choose a file:</label>
+          <input type="file" id="fileInput" webkitdirectory="" directory="" onChange={handleFileInputChange} style={{display: 'inline-block', marginLeft: '80%'}}/>
         </div>
         <div>
-          <FolderTree json={data} />
+          <FolderTree json={data} style="display: inline;"/>
         </div>
         </>
       );
