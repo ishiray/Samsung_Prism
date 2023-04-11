@@ -4,4 +4,4 @@ import App from './App';
 import './index.css';
 import Simulator from './Simulator';
 
-ReactDOM.render(<Simulator />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
