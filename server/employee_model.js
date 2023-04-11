@@ -1,16 +1,16 @@
 const Pool = require('pg').Pool
 
 const pool = new Pool({
-  user: 'my_user',
-  host: 'localhost',
-  database: 'my_database',
-  password: 'root',
+  user: 'gqbuufxv',
+  host: 'kandula.db.elephantsql.com',
+  database: 'gqbuufxv',
+  password: 'M8Zor5JFIYYatR4KO1d-hYUSU7KX5iI1',
   port: 5432,
 });
 
-const getStudents = () => {
+const getEmployees = () => {
   return new Promise(function(resolve, reject) {
-    pool.query('SELECT * FROM students ORDER BY id ASC', (error, results) => {
+    pool.query('SELECT * FROM employees ORDER BY id ASC', (error, results) => {
       if (error) {
         reject(error)
       }
@@ -42,7 +42,7 @@ const loginEmployee = (body) => {
     const Password=body.pw
     console.log('the data in empl_mod is',Email, Password, body )
     pool.query('SELECT * FROM employees WHERE email = $1', [Email], (error, results) => {
-      //console.log('the results are',results,error)
+      console.log('the results are',results,error)
       if (results.rows && results.rows[0] && results.rows[0].password===Password) {
         console.log('inside if')
         resolve(results)
@@ -57,22 +57,22 @@ const loginEmployee = (body) => {
 }
 
 
-const deleteStudent = (studentId) => {
+const deleteEmployee = (employeeId) => {
   return new Promise(function(resolve, reject) {
-    const id = parseInt(studentId)
+    const id = parseInt(employeeId)
 
-    pool.query('DELETE FROM students WHERE id = $1', [id], (error, results) => {
+    pool.query('DELETE FROM employees WHERE id = $1', [id], (error, results) => {
       if (error) {
         reject(error)
       }
-      resolve(`Student deleted with ID: ${id}`)
+      resolve(`Employee deleted with ID: ${id}`)
     })
   })
 }
 
 module.exports = {
-  getStudents,
+  getEmployees,
   createEmployee,
-  deleteStudent,
+  deleteEmployee,
   loginEmployee
 }

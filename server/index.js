@@ -11,7 +11,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-  student_model.getStudents()
+  employee_model.getEmployees()
   .then(response => {
     res.status(200).send(response);
   })
@@ -44,8 +44,8 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.delete('/students/:id', (req, res) => {
-  student_model.deleteStudent(req.params.id)
+app.delete('/employees/:id', (req, res) => {
+  employee_model.deleteEmployee(req.params.id)
   .then(response => {
     res.status(200).send(response);
   })
