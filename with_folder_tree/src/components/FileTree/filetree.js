@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import FolderTree from './FolderTree';
+import "../../styles.css";
 
 function FileTree(){
     const [data, setData] = useState({});
@@ -73,12 +74,14 @@ function FileTree(){
 
     return (
         <>
-        <div>
-          <label htmlFor="fileInput" style={{display: 'inline-block', marginLeft: '80%'}}>Choose a file:</label>
-          <input type="file" id="fileInput" webkitdirectory="" directory="" onChange={handleFileInputChange} style={{display: 'inline-block', marginLeft: '80%'}}/>
+        <div className="filetree">
+        <div >
+          <label htmlFor="fileInput">Choose a file:</label>
+          <input type="file" id="fileInput" webkitdirectory="" directory="" onChange={handleFileInputChange}/>
         </div>
         <div>
-          <FolderTree json={data} style="display: inline;"/>
+          <FolderTree json={data} />
+        </div>
         </div>
         </>
       );

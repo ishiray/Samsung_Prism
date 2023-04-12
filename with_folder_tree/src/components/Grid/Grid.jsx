@@ -6,10 +6,9 @@ function Grid(props) {
     <div
       style={{
         marginTop: "0%",
-        marginLeft: "0.08%",
+        marginLeft: "180px",
         marginBottom: "0%",
-        width: "80%",
-        //backgroundColor: "blue",
+        // backgroundColor: "blue",
         height: "615px"
         // alignItems: "center"
       }}

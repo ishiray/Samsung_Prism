@@ -16,6 +16,7 @@ import DataTransfer from "./pages/DataTransfer";
 import FileTree from "./components/FileTree/filetree";
 
 
+
 function Simulator() {
   console.log(document.getElementById("main").className);
   document.getElementById("main").classList.remove("auth");
@@ -25,11 +26,10 @@ function Simulator() {
   return (
     <>
       <Router>
-       
         <Navbar />
-        <FileTree />
+        
         <Sidebar />
-       
+        <FileTree />
         <Routes>
           <Route exact path="/" element={<SUT />} />
           <Route path="SUT" element={<SUT />} />
@@ -40,6 +40,7 @@ function Simulator() {
           <Route path="Messages" element={<Messages />} />
           <Route path="DataTransfer" element={<DataTransfer />} />
         </Routes>
+        
         <BottomBar />
       </Router>
     </>

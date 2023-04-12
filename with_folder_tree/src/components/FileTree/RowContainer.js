@@ -7,8 +7,8 @@ const Row = Styled.div`
     align-items: center;
     cursor:${({ type }) => type === 'folder' ? 'pointer' : null};
     padding: 0rem;
-    margin: 0rem;
-    height: 2rem;
+    margin: 0rem;height: 2rem;
+    
 `
 
 const Name = Styled.h5`

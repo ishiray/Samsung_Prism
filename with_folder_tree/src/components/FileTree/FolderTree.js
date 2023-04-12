@@ -3,10 +3,7 @@ import Styled from 'styled-components';
 import RowContainer from './RowContainer';
 
 const Container = Styled.div`
-    margin-left: 80%; /* Update to push the component to the right */
-    margin-right: 0%; /* Update to push the component to the right */
-    font-size: 20px;
-    display: inline-block;
+    padding:0rem 1.5rem;
 `
 
 const FolderTree = ({ json }) => {
@@ -18,7 +15,7 @@ const FolderTree = ({ json }) => {
     if (json.folder) {
         return (
             <Container>
-                <RowContainer type={'folder'} name={json.name} handleClick={handleClick}  />
+                <RowContainer type={'folder'} name={json.name} handleClick={handleClick} />
 
                 <div style={{ display: expand ? 'block' : 'none' }}>
                     {json.children.map(item => {
