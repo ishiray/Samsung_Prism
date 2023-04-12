@@ -29,7 +29,7 @@ function Simulator() {
         <Navbar />
         
         <Sidebar />
-        <FileTree />
+        
         <Routes>
           <Route exact path="/" element={<SUT />} />
           <Route path="SUT" element={<SUT />} />
@@ -42,6 +42,7 @@ function Simulator() {
         </Routes>
         
         <BottomBar />
+        <FileTree />
       </Router>
     </>
   );

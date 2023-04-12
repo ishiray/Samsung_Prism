@@ -76,9 +76,9 @@ input {
   margin-top: 20px;
   margin-left: 30px;
   margin-right: 20px;
-  border-radius: 30px;
-  height: 3vw;
-  width: 8vw;
+  border-radius: 10px;
+  height: 4vw;
+  width: 6vw;
   border: none;
 }
 
@@ -87,7 +87,7 @@ button {
   border:none;
   cursor: pointer;
   color: white;
-  
+  font-size: smaller;
 }
 
 button:disabled {

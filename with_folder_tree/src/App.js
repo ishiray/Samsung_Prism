@@ -6,7 +6,7 @@ import Simulator from './Simulator.js';
 
 export default function App() {
 
-  const [loggedIn, setLoggedIn] =useState(true);
+  const [loggedIn, setLoggedIn] =useState(false);
   const regToApp = (regData) => {
     setLoggedIn(regData)
   }

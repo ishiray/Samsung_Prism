@@ -76,7 +76,7 @@ function FileTree(){
         <>
         <div className="filetree">
         <div >
-          <label htmlFor="fileInput">Choose a file:</label>
+          <label htmlFor="fileInput">Choose a Folder:</label>
           <input type="file" id="fileInput" webkitdirectory="" directory="" onChange={handleFileInputChange}/>
         </div>
         <div>
