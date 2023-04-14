@@ -16,7 +16,7 @@ export default function BottomNav() {
       <div style={{ width: "100%" }}>
         <ul
           className="nav nav-tabs"
-          style={{ backgroundColor: "#e8e8e8", width: "100%" }}
+          style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "280px" }}
         >
           <li className="nav-item">
             <a
@@ -48,8 +48,9 @@ export default function BottomNav() {
               </button>
             </a>
           </li>
+          <h6><br></br>This is the General Output view</h6> 
         </ul>
-        <h6>This is the General Output view</h6>
+        
       </div>
     );
   } else {
@@ -57,7 +58,7 @@ export default function BottomNav() {
       <div style={{ width: "100%" }}>
         <ul
           className="nav nav-tabs"
-          style={{ backgroundColor: "#e8e8e8", width: "100%" }}
+          style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "280px" }}
         >
           <li className="nav-item">
             <a
@@ -89,8 +90,9 @@ export default function BottomNav() {
               </button>
             </a>
           </li>
+          <h6><br></br>This is the Symbol Text View </h6>
         </ul>
-        <h6>This is the Symbol Text View </h6>
+        
       </div>
     );
   }

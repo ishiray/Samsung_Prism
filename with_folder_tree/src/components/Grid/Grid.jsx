@@ -1,5 +1,6 @@
 import React from "react";
 import "./GridStyle.css";
+import background from "./grid.jpeg"
 
 function Grid(props) {
   return (
@@ -8,8 +9,9 @@ function Grid(props) {
         marginTop: "0%",
         marginRight: "40%",
         marginBottom: "0%",
-
-        // backgroundColor: "blue",
+        width:"1015px",
+        backgroundImage: `url(${background})` ,
+        //backgroundColor: "blue",
         height: "615px"
         // alignItems: "center"
       }}
