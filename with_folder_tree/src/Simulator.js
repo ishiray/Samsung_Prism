@@ -14,6 +14,7 @@ import Comment from "./pages/Comment";
 import Timer from "./pages/Timer";
 import DataTransfer from "./pages/DataTransfer";
 import FileTree from "./components/FileTree/filetree";
+import Home from "./pages/Home";
 
 
 
@@ -31,7 +32,7 @@ function Simulator() {
         <Sidebar />
         
         <Routes>
-          <Route exact path="/" element={<SUT />} />
+          <Route exact path="/" element={<Home />} />
           <Route path="SUT" element={<SUT />} />
           <Route path="SIM" element={<SIM />} />
           <Route path="Analyzer" element={<Analyzer />} />

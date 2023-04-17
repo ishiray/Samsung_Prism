@@ -5,11 +5,19 @@ import { Link } from "react-router-dom";
 import { SidebarData } from "./sidebarData";
 import "./sidebarStyles.css";
 import { IconContext } from "react-icons";
+import { useNavigate } from 'react-router-dom';
 
 
 function Sidebar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
+
+  const navigation = useNavigate();
+
+  // function to print the component dragged
+  function on_drag(e){
+    navigation(e.target.href.split('/')[3]);
+  }
 
   return (
     <>
@@ -31,7 +39,7 @@ function Sidebar() {
             </li> 
             {SidebarData.map((item, index) => {
               return (
-                <li key={index} className={item.className} >
+                <li onDrag={on_drag} key={index} className={item.className} >
                   <Link to={item.path}>
                     {item.icon}
                     <span> {item.title}</span>
