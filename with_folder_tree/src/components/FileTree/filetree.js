@@ -5,79 +5,104 @@ import "../../styles.css";
 function FileTree(){
     const [data, setData] = useState({});
 
-    function getStructuredList(listFiles){
-
-
-        //////////////////////////////////////////////////////////////
-        function createNode(fileName,path,folder){
-          return {
-            name:fileName,
-            path:path,
-            folder:folder,
-            toggled: true,
-            children: []
-          }
+    async function getFilesInDirectory(dirHandle,currStruct=null) {
+      function createNode(filesystemfilehandle,isFolder,fileHandle=null){
+        return {
+          name:filesystemfilehandle.name,
+          handle:filesystemfilehandle,
+          //type:isFolder? "folder": String(fileHandle.type).split("/")[0],
+          type:isFolder? "folder": String(fileHandle.type),
+          folder:isFolder,
+          toggled: true,
+          children: []
         }
-    
-        function recurStructCreate(currStruct,elemList,currpath){
-          console.log("in recurStructCreate with inputs current struct "+JSON.stringify(currStruct)+" elements list "+elemList+" current path "+currpath);
-          if (elemList.length === 0) return currStruct;
-          let elem=elemList.shift();
-          currpath=[currpath,elem].join("/");
-          for (let i = 0; i < currStruct.length; i++){
-            if (currStruct[i]["name"]===elem){
-              console.log("Found the element ",elem);
-              currStruct[i]["children"]=recurStructCreate(currStruct[i]["children"],elemList,currpath);
-              console.log("Now returning 1 ",JSON.stringify(currStruct));
-              return currStruct;
+      }
+
+
+      try {
+        if (currStruct===null){
+          currStruct= createNode(dirHandle,true);
+        }
+
+        let entries= await dirHandle.values();
+
+        for await (const entry of entries) {
+          //console.log(entry);
+
+          if (entry.kind==='file') {
+            // Entry is a file
+            const fileHandle = await entry.getFile();
+            // Perform file operations with fileHandle
+            let fileNode=createNode(entry, false,fileHandle);
+
+            if(fileNode.type==="text/plain"){
+              const writableStream = await entry.createWritable();
+              const array = ["it worked"];
+              const theBlob= new Blob(array, { type: "text/plain" });
+              // write our file
+              await writableStream.write(theBlob);
+              // close the file and write the contents to disk.
+              await writableStream.close();
+              console.log("done editing");
             }
+
+            currStruct.children.push(fileNode);
+          } 
+          
+          
+          else if (entry.kind==='directory') {
+            // Entry is a folder
+            const subdirectoryHandle = await dirHandle.getDirectoryHandle(entry.name);
+            console.log("Folder Handle:", subdirectoryHandle);
+            let folderNode=createNode(subdirectoryHandle, true);
+            console.log("Folder node:", folderNode);
+            folderNode=await getFilesInDirectory(subdirectoryHandle,folderNode);
+            console.log("new Folder node:", folderNode);
+            currStruct.children.push(folderNode);
           }
-    
-          //if not found
-          console.log("Did not find the element ",elem);
-          let newNode=createNode(elem,currpath,!elem.includes("."));
-          console.log("New node is ",JSON.stringify(newNode));
-          currStruct.push(newNode);
-          console.log("New currStruct is ",JSON.stringify(currStruct));
-          currStruct[(currStruct.length)-1]["children"]=recurStructCreate(currStruct[(currStruct.length)-1]["children"],elemList,currpath);
-          console.log("Now returning 2 ",JSON.stringify(currStruct));
-          return currStruct;
         }
-        ///////////////////////////////////////////////////////////////////////////////
-    
-        let structure=[];
-        for (const file of listFiles){
-          const splitPathList=file.webkitRelativePath.split("/");
-          let currPath="";
-    
-          structure=recurStructCreate(structure,splitPathList,currPath);
-          console.log("This is the structure "+JSON.stringify(structure)+" after a file "+file.webkitRelativePath);
-        }
-        console.log("This is the structured list "+JSON.stringify(structure));
-        return structure[0];
+        console.log("done with loop and this is the output");
+        console.log(JSON.stringify(currStruct));
+        return currStruct;
+      } catch (err) {
+        console.error(err);
+      }
     }
-    
-    
-    const handleFileInputChange = (e) => {
-    console.log(e);
 
-    const selectedFiles = Array.from(e.target.files);
-    console.log(selectedFiles);
-    console.log("Getting structured list");
-    const structuredList=getStructuredList(selectedFiles);
-    console.log("This is the final structured list "+JSON.stringify(structuredList));
 
-    //setFilesList(selectedFiles);
-    setData(structuredList);
+    async function requestFileSystemAccess() {
+      try {
+        //await navigator.storage.requestTemporary();
+        const dirHandle = await window.showDirectoryPicker();
+        // Use the selected directory handle to access files within it
+        // ...
+        console.log(dirHandle);
 
-    };
+        const opts = {};
+        opts.mode = "readwrite";
+        const perms = await dirHandle.requestPermission(opts);
+        console.log(perms);
+
+        //console.log(dirHandle.keys());
+
+        let theData=await getFilesInDirectory(dirHandle);
+        console.log("FINALLY");
+        console.log(theData);
+        setData(theData);
+
+      } catch (err) {
+        console.error(err);
+      }
+      
+    }
+
 
     return (
         <>
         <div className="filetree">
         <div >
           <label htmlFor="fileInput">Choose a Folder:</label>
-          <input type="file" id="fileInput" webkitdirectory="" directory="" onChange={handleFileInputChange}/>
+          <button id="folder-select" onClick={requestFileSystemAccess} style={{ backgroundColor: '#919191' }}>click me</button>
         </div>
         <div>
           <FolderTree json={data} />
