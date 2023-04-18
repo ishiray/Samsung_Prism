@@ -8,10 +8,11 @@ body {
     position: fixed;
     top: 9.5%;
     right: 0;
-    /*left: 80%;*/
+    width: 470px;
+    /* left: 80%; */
     font-size: 17px;
     background-color: rgb(245, 245, 245);
-    height: 50%;
+    height: 53%;
     overflow: scroll;
   
 }
