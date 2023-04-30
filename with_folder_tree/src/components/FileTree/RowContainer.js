@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import Styled from 'styled-components';
 import { FcFolder, FcFile } from "react-icons/fc";
+import { FaFolder, FaFile, FaFolderOpen } from "react-icons/fa";
 
 const Row = Styled.div`
     display:flex;
@@ -16,10 +18,10 @@ const Name = Styled.h5`
     font-size: 15px;
 `;
 
-const RowContainer = ({ type, name, handleClick }) => {
+const RowContainer = ({ type, name, handleClick, folderIcon }) => {
     return (
         <Row type={type} onClick={handleClick ? handleClick : null}>
-            {type === 'folder' ? <FcFolder /> : <FcFile />}
+            {type === 'folder' ? folderIcon : <FaFile />}
             <Name>{name}</Name>
         </Row>
     )
