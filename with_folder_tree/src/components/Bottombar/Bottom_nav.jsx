@@ -16,7 +16,7 @@ export default function BottomNav() {
       <div style={{ width: "100%" }}>
         <ul
           className="nav nav-tabs"
-          style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "280px" }}
+          style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "17rem" }}
         >
           <li className="nav-item">
             <a
@@ -58,7 +58,7 @@ export default function BottomNav() {
       <div style={{ width: "100%" }}>
         <ul
           className="nav nav-tabs"
-          style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "280px" }}
+          style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "17rem" }}
         >
           <li className="nav-item">
             <a

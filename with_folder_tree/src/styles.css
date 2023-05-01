@@ -5,14 +5,14 @@ body {
 .filetree {
   
     /* Set the desired position of the new component */
-    position: fixed;
-    top: 9.5%;
+    position: absolute;
+    top: 10%;
     right: 0;
-    width: 470px;
+    width: 33%;
     /* left: 80%; */
     font-size: 17px;
     background-color: rgb(245, 245, 245);
-    height: 53%;
+    height: 55%;
     overflow: scroll;
   
 }
