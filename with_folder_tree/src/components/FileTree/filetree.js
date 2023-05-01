@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import FolderTree from './FolderTree';
 import "../../styles.css";
+import Button from 'react-bootstrap/Button';
 
 function FileTree(){
     const [data, setData] = useState({});
@@ -102,7 +103,11 @@ function FileTree(){
         <div className="filetree">
         <div >
           <label htmlFor="fileInput">Choose a Folder:</label>
-          <button id="folder-select" onClick={requestFileSystemAccess} style={{ backgroundColor: '#919191' }}>click me</button>
+          <Button variant="outline-dark" onClick={requestFileSystemAccess} style={{ width: '10%', height: '4%', margin: 0, marginLeft: "2%", fontSize: '14px', padding:0}}>
+            Select
+          </Button>
+          {/*<button id="folder-select" onClick={requestFileSystemAccess} style={{ backgroundColor: '#919191' }}>click me</button>
+        */}
         </div>
         <div>
           <FolderTree json={data} />
