@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="output/" kind="src" path=""/>
+	<classpathentry exported="true" kind="lib" path="appframework-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-net-1.4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="graph.jar"/>
+	<classpathentry exported="true" kind="lib" path="jcommon-0.8.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="jdom.jar"/>
+	<classpathentry exported="true" kind="lib" path="jxl.jar"/>
+	<classpathentry exported="true" kind="lib" path="pg73jdbc2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="output"/>
+</classpath>
