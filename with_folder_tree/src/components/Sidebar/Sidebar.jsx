@@ -6,6 +6,8 @@ import { SidebarData } from "./sidebarData";
 import "./sidebarStyles.css";
 import { IconContext } from "react-icons";
 import { useNavigate } from 'react-router-dom';
+import { DargDropContext, Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
+
 
 
 function Sidebar() {
@@ -15,9 +17,9 @@ function Sidebar() {
   const navigation = useNavigate();
 
   // function to print the component dragged
-  function on_drag(e){
-    navigation(e.target.href.split('/')[3]);
-  }
+  // function on_drag(e){
+  //   navigation(e.target.href.split('/')[3]);
+  // }
 
   return (
     <>
@@ -28,23 +30,35 @@ function Sidebar() {
             </Link>
         </div> 
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
-          <ul className="nav-menu-items" onClick={showSidebar} style={{ border: "5px blue" }}>
+          <ul className="nav-menu-items" style={{ border: "5px blue" }}>
             
           
       
              <li className='navbar-toggle'>
               <Link to="#" className='menu-bars'>
-                <AiIcons.AiOutlineClose/>
+                <AiIcons.AiOutlineClose onClick={showSidebar} />
               </Link>
             </li> 
             {SidebarData.map((item, index) => {
               return (
-                <li onDrag={on_drag} key={index} className={item.className} >
-                  <Link to={item.path}>
-                    {item.icon}
-                    <span> {item.title}</span>
-                  </Link>
-                </li>
+                <DragDropContext>
+                  <Droppable droppableId="characters">
+                    {(provided) => (
+                      <div ref={provided.innerRef} {...provided.droppableProps}>
+                        <Draggable key="characters" draggableId="characters" index={index}>
+                        {(provided) => (
+                          <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={index} className={item.className}>
+                            <Link to={item.path}>
+                              {item.icon}
+                              <span> {item.title}</span>
+                            </Link>
+                          </li>
+                        )}
+                        </Draggable>
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
               );
             })}
           </ul>

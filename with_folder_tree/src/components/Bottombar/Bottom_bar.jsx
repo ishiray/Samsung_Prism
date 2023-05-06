@@ -8,7 +8,7 @@ export default function BottomBar() {
       className=""
       style={{
         width: "100%",
-        height: "35%",
+        height: "32%",
         position: "absolute",
         bottom: "1px"
       }}

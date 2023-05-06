@@ -1,6 +1,7 @@
 import "./styles.css";
 import * as React from "react";
 import BottomBar from "./components/Bottombar/Bottom_bar";
+import Workspace from "./components/Workspace/workspace";
 // import { NavLink } from "react-router-dom";
 // import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
@@ -28,10 +29,12 @@ function Simulator() {
     <>
       <Router>
         <Navbar />
+        {/* <Workspace/> */}
         
         <Sidebar />
         
         <Routes>
+          
           <Route exact path="/" element={<Home />} />
           <Route path="SUT" element={<SUT />} />
           <Route path="SIM" element={<SIM />} />
@@ -41,9 +44,9 @@ function Simulator() {
           <Route path="Messages" element={<Messages />} />
           <Route path="DataTransfer" element={<DataTransfer />} />
         </Routes>
-        
         <BottomBar />
         <FileTree />
+        
       </Router>
     </>
   );
