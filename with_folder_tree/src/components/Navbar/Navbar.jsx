@@ -2,6 +2,7 @@ import React from "react";
 import icon from "./icon.png";
 import "./Navbar.css";
 import NavbarButton from "./NavbarButton";
+import {useState} from 'react';
 
 import { FaFileExcel } from "react-icons/fa";
 import { FaFolderOpen } from "react-icons/fa";
@@ -32,6 +33,27 @@ function createIcons(Element) {
 }*/
 
 const Navbar = () => {
+
+const [profiles, setProfiles] = useState(false);
+const [profilesRaw, setProfilesRaw] = useState(false);
+
+async function getProfileNames() {
+  fetch('http://localhost:3001/profileList')
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      console.log('The data is ',data);
+      setProfilesRaw(data);
+      var profList=[];
+      for(let profile of data){
+        profList.push(profile["sim_name"]);
+        console.log('Pushing ',profile["sim_name"]);
+      }
+      console.log('Setting ',profList);
+      setProfiles(profList);
+    });
+}
   return (
     <>
       <Nav>
@@ -63,7 +85,9 @@ const Navbar = () => {
       <Nav>
         <div className="second">
           <div className="button">
-            <FaFileExcel className="icon" />
+            <FaFileExcel className="icon" onClick={
+              getProfileNames
+            }/>
           </div>
         </div>
         <div className="second">
