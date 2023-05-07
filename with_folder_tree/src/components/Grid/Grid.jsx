@@ -9,7 +9,7 @@ function Grid(props) {
         marginTop: "0%",
         marginRight: "40%",
         marginBottom: "0%",
-        width:"1015px",
+        width:"100vw",
         backgroundImage: `url(${background})` ,
         //backgroundColor: "blue",
         height: "615px"
