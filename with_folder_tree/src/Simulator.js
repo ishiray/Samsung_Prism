@@ -47,9 +47,6 @@ function Simulator() {
 
   return (
     <>
-      <div style={{ height: "100vh", width: "100vw" }}>
-        <Router>
-
         <Navbar />
         {/* <Workspace/> */}
 
@@ -115,21 +112,6 @@ function Simulator() {
         </div>
         <BottomBar />
         </div>
-
-        {/* <Routes>
-          
-          <Route exact path="/" element={<Home />} />
-          <Route path="SUT" element={<SUT />} />
-          <Route path="SIM" element={<SIM />} />
-          <Route path="Analyzer" element={<Analyzer />} />
-          <Route path="Timer" element={<Timer />} />
-          <Route path="Comment" element={<Comment />} />
-          <Route path="Messages" element={<Messages />} />
-          <Route path="DataTransfer" element={<DataTransfer />} />
-        </Routes> */}
-        {/* <Workspace /> */}
-      </Router>
-      </div>
     </>
   );
 }

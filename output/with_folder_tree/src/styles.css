@@ -1,0 +1,48 @@
+body {
+  position: relative;
+}
+
+.filetree {
+  
+    /* Set the desired position of the new component */
+    position: absolute;
+    top: 10%;
+    right: 0;
+    width: 33%;
+    /* left: 80%; */
+    font-size: 17px;
+    background-color: rgb(245, 245, 245);
+    height: 58%;
+    overflow: scroll;
+  
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.simulator {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* border: 5px blue; */
+}
+
+.auth {
+  background-image: linear-gradient(79deg, #7439db, #c66fbc 48%, #f7944d
+  );
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
