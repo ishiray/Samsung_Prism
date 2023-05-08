@@ -1,0 +1,35 @@
+@import url("https://cdn.syncfusion.com/ej2/bootstrap5.css");
+
+.App{
+    margin: 2%;
+}
+
+table, th, td {
+    border: 1px solid black;
+  }
+  
+  *{
+    font-family: 'Sora', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.second {
+    padding: 0 0.5rem;
+    display: flex;
+    align-items:flex-start;
+}
+
+.icon {
+    height: 1.2vw;
+    width: 1.2vw;
+    position: absolute;
+    top: 1.8rem;
+}
+
+.button {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 0.5rem;
+}
