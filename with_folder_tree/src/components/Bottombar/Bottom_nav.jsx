@@ -13,7 +13,7 @@ export default function BottomNav() {
 
   if (state) {
     return (
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%",flex:"1" }}>
         <ul
           className="nav nav-tabs"
           style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "17rem" }}
@@ -55,7 +55,7 @@ export default function BottomNav() {
     );
   } else {
     return (
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%" ,flex:"1"}}>
         <ul
           className="nav nav-tabs"
           style={{ backgroundColor: "#e8e8e8", width: "100%",  height: "17rem" }}

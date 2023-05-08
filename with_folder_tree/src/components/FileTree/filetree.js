@@ -103,7 +103,7 @@ function FileTree(){
         <div className="filetree">
         <div >
           <label htmlFor="fileInput">Choose a Folder:</label>
-          <Button variant="outline-dark" onClick={requestFileSystemAccess} style={{ width: '10%', height: '4%', margin: 0, marginLeft: "2%", fontSize: '14px', padding:0}}>
+          <Button variant="outline-dark" onClick={requestFileSystemAccess} style={{ height: '4%', margin: 0, marginLeft: "2%", fontSize: '14px', padding:0}}>
             Select
           </Button>
           {/*<button id="folder-select" onClick={requestFileSystemAccess} style={{ backgroundColor: '#919191' }}>click me</button>

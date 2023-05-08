@@ -5,15 +5,12 @@ body {
 .filetree {
   
     /* Set the desired position of the new component */
-    position: absolute;
-    top: 10%;
-    right: 0;
-    width: 33%;
+    width: 250px;
     /* left: 80%; */
     font-size: 17px;
     background-color: rgb(245, 245, 245);
-    height: 58%;
-    overflow: scroll;
+    height: 100%;
+    overflow-y: scroll;
   
 }
 
@@ -45,4 +42,25 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+ul {
+  list-style-type: none;  
+}
+
+.sidebar{
+  width: 250px;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.cell {
+  /* width: 250px; */
+  height: 20px;
+  border: 1px solid grey;
+  text-align: center;
 }
