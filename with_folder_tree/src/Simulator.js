@@ -47,26 +47,25 @@ function Simulator() {
 
   return (
     <>
-        <Navbar />
-        {/* <Workspace/> */}
-
-        {/* <Sidebar /> */}
-        <div className="d-flex flex-column">
-
-       
-        <div className="d-flex pb-3 pt-1" style={{ width: "100vw", height: "60vh" }}>
+      <div className="d-flex flex-column">
+        <div
+          className="d-flex pb-3 pt-1"
+          style={{ width: "100vw", height: "60vh" }}
+        >
           <nav className="sidebar ">
-            <ul className="d-flex justify-content-around flex-column h-100"> 
+            <ul className="d-flex justify-content-around flex-column h-100">
               {SidebarData.map((item, index) => (
                 <li
                   key={index}
                   draggable={true}
                   onDragStart={(event) => handleDragStart(event, item.title)}
-                > 
-                <div className="d-flex align-items-center" style={{cursor:'pointer'}}>
-                  {item.icon}&nbsp;{item.title}
-                </div>
-                  
+                >
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    {item.icon}&nbsp;{item.title}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -89,7 +88,11 @@ function Simulator() {
                       <td
                         key={columnIndex}
                         className="cell"
-                        style={{ width: "100px" , cursor:"pointer",fontSize:"0.7rem"}}
+                        style={{
+                          width: "100px",
+                          cursor: "pointer",
+                          fontSize: "0.7rem",
+                        }}
                         onDragOver={handleDragOver}
                         onClick={() => {
                           const newTableCells = [...tableCells];
@@ -110,8 +113,7 @@ function Simulator() {
           </div>
           <FileTree />
         </div>
-        <BottomBar />
-        </div>
+      </div>
     </>
   );
 }
