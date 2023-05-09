@@ -47,6 +47,7 @@ function Simulator() {
 
   return (
     <>
+    <Router>
         <Navbar />
         {/* <Workspace/> */}
 
@@ -54,7 +55,7 @@ function Simulator() {
         <div className="d-flex flex-column">
 
        
-        <div className="d-flex pb-3 pt-1" style={{ width: "100vw", height: "60vh" }}>
+        <div className="d-flex pb-2 pt-1" style={{ width: "100vw", height: "60vh" }}>
           <nav className="sidebar ">
             <ul className="d-flex justify-content-around flex-column h-100"> 
               {SidebarData.map((item, index) => (
@@ -112,6 +113,7 @@ function Simulator() {
         </div>
         <BottomBar />
         </div>
+        </Router>
     </>
   );
 }

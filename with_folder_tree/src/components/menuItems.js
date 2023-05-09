@@ -5,127 +5,127 @@ export const menuItems = [
     submenu: [
       {
         title: 'Workspace',
-        url: '/workspace',
+        // url: '/workspace',
       },
     ],
   },
   {
     title: 'Edit',
-    url: '/',
+    // url: '/',
   },
   {
     title: 'Run',
-    url: '/',
+    // url: '/',
   },
   {
     title: 'Configuration',
-    url: '/',
+    // url: '/',
     submenu: [
       {
         title: 'Application',
-        url: '/',
+        // url: '/',
       },
       {
         title: 'Profile Simulators',
-        url: '/',
+        // url: '/',
         submenu: [
           {
             title: 'UE/EnodeB',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'S-GW',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'P-GW',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'MME',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'MAG',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'MSCServer',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'HRPD',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'PreR8SGSN',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'R8SGSN',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'E_SMLC',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'ePDG',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'CBC',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'ONExCSIWS',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'MCE',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'LIADMF',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'DSMIP',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'E_GMLC',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'BMSC',
-            url: '/',
+            // url: '/',
           },
           {
             title: 'NGNB',
-            url: '/',
+            // url: '/',
           },
         ],
       },
       {
         title: 'Copy All Profiles',
-        url: '/',
+        // url: '/',
       },
     ],
   },
   {
     title: 'Result',
-    url: '/',
+    // url: '/',
     
   },
   {
     title: 'Windows',
-    url: '/',
+    // url: '/',
     
   },
   {
     title: 'Help',
-    url: '/',
+    // url: '/',
     
   }
 ];
