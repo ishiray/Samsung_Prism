@@ -1,4 +1,4 @@
-export const menuItems = [
+export const menuItemsList = [
   {
     title: 'File',
     url: '/',
@@ -29,6 +29,7 @@ export const menuItems = [
         title: 'Profile Simulators',
         // url: '/',
         submenu: [
+          /*
           {
             title: 'UE/EnodeB',
             // url: '/',
@@ -104,7 +105,7 @@ export const menuItems = [
           {
             title: 'NGNB',
             // url: '/',
-          },
+          },*/
         ],
       },
       {
