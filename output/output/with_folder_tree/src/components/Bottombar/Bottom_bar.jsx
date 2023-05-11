@@ -8,9 +8,9 @@ export default function BottomBar() {
       className=""
       style={{
         width: "100%",
-        height: "32%",
+        height: "1.5vh",
         position: "absolute",
-        bottom: "1px"
+        bottom: "0"
       }}
     >
       <BottomNav />

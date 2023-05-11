@@ -19,7 +19,7 @@ export const menuItemsList = [
   },
   {
     title: 'Configuration',
-    // url: '/',
+     url: '/',
     submenu: [
       {
         title: 'Application',

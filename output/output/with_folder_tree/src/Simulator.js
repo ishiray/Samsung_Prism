@@ -37,9 +37,20 @@ function Simulator() {
     event.preventDefault();
   };
 
+  const handleClick = (event) => {
+    const word = event.dataTransfer.getData("text/plain");
+  }
+
   const handleDrop = (event, rowIndex, columnIndex) => {
     event.preventDefault();
-    const item = event.dataTransfer.getData("text/plain");
+    const item2 = event.dataTransfer.getData("text/plain");
+    const item = <div>
+                  <div style ={{ height: "1.2rem", width: "7.7rem", backgroundColor: "blue",  paddingRight:"1rem"}}>
+                    <h6 align="center">{item2}</h6>
+                  </div>
+                  
+                 </div>
+    
     const newTableCells = [...tableCells];
     newTableCells[rowIndex][columnIndex] = item;
     setTableCells(newTableCells);
@@ -47,6 +58,7 @@ function Simulator() {
 
   return (
     <>
+    <Router>
         <Navbar />
         {/* <Workspace/> */}
 
@@ -54,7 +66,7 @@ function Simulator() {
         <div className="d-flex flex-column">
 
        
-        <div className="d-flex pb-3 pt-1" style={{ width: "100vw", height: "60vh" }}>
+        <div className="d-flex pb-2 pt-1" style={{ width: "100vw", height: "60vh" }}>
           <nav className="sidebar ">
             <ul className="d-flex justify-content-around flex-column h-100"> 
               {SidebarData.map((item, index) => (
@@ -112,6 +124,7 @@ function Simulator() {
         </div>
         <BottomBar />
         </div>
+        </Router>
     </>
   );
 }

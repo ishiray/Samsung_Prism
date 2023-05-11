@@ -37,9 +37,20 @@ function Simulator() {
     event.preventDefault();
   };
 
+  const handleClick = (event) => {
+    const word = event.dataTransfer.getData("text/plain");
+  }
+
   const handleDrop = (event, rowIndex, columnIndex) => {
     event.preventDefault();
-    const item = event.dataTransfer.getData("text/plain");
+    const item2 = event.dataTransfer.getData("text/plain");
+    const item = <div>
+                  <div style ={{ height: "1.2rem", width: "7.7rem", backgroundColor: "blue",  paddingRight:"1rem"}}>
+                    <h6 align="center">{item2}</h6>
+                  </div>
+                  
+                 </div>
+    
     const newTableCells = [...tableCells];
     newTableCells[rowIndex][columnIndex] = item;
     setTableCells(newTableCells);

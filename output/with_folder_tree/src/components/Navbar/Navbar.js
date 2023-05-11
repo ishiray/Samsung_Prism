@@ -23,52 +23,52 @@ import { FaTools } from "react-icons/fa";
 import { BsTools } from "react-icons/bs";
 
 import { Nav, NavLink, Bars, NavMenu } from "./NavbarElements";
-
-
-// const Navbar = () => {
-//   return (
-//     <>
-//       <Nav>
-//         <NavMenu>
-//           <NavLink to="" activeStyle>
-//             File
-//           </NavLink>
-//           <NavLink to="" activeStyle>
-//             Edit
-//           </NavLink>
-//           <NavLink to="" activeStyle>
-//             Run
-//           </NavLink>
-//           <NavLink to="" activeStyle>
-//             Configuration
-//           </NavLink>
-//           <NavLink to="" activeStyle>
-//             Result
-//           </NavLink>
-//           <NavLink to="" activeStyle>
-//             Windows
-//           </NavLink>
-//           <NavLink to="" activeStyle>
-//             Help
-//           </NavLink>
-//         </NavMenu>
-//       </Nav>
-
-
-//     </>
-//   );
-// };
-
-// export default Navbar;
-
 import "./Navbar.css";
-import { menuItems } from '../menuItems';
 import MenuItems from './MenuItems';
+import { menuItemsList } from './menuItemsList';
+
 const Navbar = () => {
+
+  async function getProfileNames() {
+    fetch('http://localhost:3001/profileList')
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log('The data is ',data);
+        var profList=[];
+        //get index of configuration tab in menuItemsList
+        var confIndex;
+        var profsimIndex;
+        for(confIndex = 0; confIndex < menuItemsList.length; confIndex++){
+          if (menuItemsList[confIndex]["title"]==='Configuration'){
+            break;
+          }
+        }
+        for(profsimIndex = 0; profsimIndex < menuItemsList[confIndex]["submenu"].length; profsimIndex++){
+          if (menuItemsList[confIndex]["submenu"][profsimIndex]["title"]==='Profile Simulators'){
+            break;
+          }
+        }
+        for(let profile of data){
+          profList.push(profile["sim_name"]);
+          console.log('Pushing ',profile["sim_name"]);
+          menuItemsList[confIndex]["submenu"][profsimIndex]["submenu"].push({
+            title: profile["sim_name"],
+            // url: '/',
+          })
+        }
+        console.log('This is the profiles list ',profList);
+        console.log('This is the new menuItemsList ',menuItemsList);
+      });
+  }
+  
+  getProfileNames();
+  
   return (
     <nav>
       <ul className="menus">
-        {menuItems.map((menu, index) => {
+        {menuItemsList.map((menu, index) => {
           const depthLevel = 0;
           return (
             <MenuItems
