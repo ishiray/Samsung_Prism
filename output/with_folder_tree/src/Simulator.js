@@ -39,92 +39,131 @@ function Simulator() {
 
   const handleClick = (event) => {
     const word = event.dataTransfer.getData("text/plain");
-  }
+  };
 
   const handleDrop = (event, rowIndex, columnIndex) => {
     event.preventDefault();
     const item2 = event.dataTransfer.getData("text/plain");
-    const item = <div>
-                  <div style ={{ height: "1.2rem", width: "7.7rem", backgroundColor: "blue",  paddingRight:"1rem"}}>
-                    <h6 align="center">{item2}</h6>
-                  </div>
-                  
-                 </div>
-    
+    const item = (
+      <div>
+        <div
+          style={{
+            height: "1.2rem",
+            backgroundColor: "#ff000d75",
+            paddingRight: "1rem",
+          }}
+        >
+          <h6 align="center">{item2}</h6>
+        </div>
+      </div>
+    );
+
     const newTableCells = [...tableCells];
     newTableCells[rowIndex][columnIndex] = item;
+    for (let i = rowIndex + 1; i < 30; i++) {
+      const item3 = (
+        <div
+          style={{
+            height: "100%",
+            width: "2px",
+            backgroundColor: "#ff000d75",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        ></div>
+      );
+      newTableCells[i][columnIndex] = item3;
+      setTableCells(newTableCells);
+    }
     setTableCells(newTableCells);
   };
 
   return (
     <>
-    <Router>
+      <Router>
         <Navbar />
         {/* <Workspace/> */}
 
         {/* <Sidebar /> */}
         <div className="d-flex flex-column">
-
-       
-        <div className="d-flex pb-2 pt-1" style={{ width: "100vw", height: "60vh" }}>
-          <nav className="sidebar ">
-            <ul className="d-flex justify-content-around flex-column h-100"> 
-              {SidebarData.map((item, index) => (
-                <li
-                  key={index}
-                  draggable={true}
-                  onDragStart={(event) => handleDragStart(event, item.title)}
-                > 
-                <div className="d-flex align-items-center" style={{cursor:'pointer'}}>
-                  {item.icon}&nbsp;{item.title}
-                </div>
-                  
-                </li>
-              ))}
-            </ul>
-          </nav>
-
           <div
-            style={{
-              flex: 1,
-              overflowX: "scroll",
-              overflowY: "scroll",
-            }}
+            className="d-flex pb-2 pt-1"
+            style={{ width: "100vw", height: "60vh" }}
           >
-            <table
-              style={{ height: "100%", width: "250vw", tableLayout: "fixed" }}
-            >
-              <tbody>
-                {tableCells.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((cell, columnIndex) => (
-                      <td
-                        key={columnIndex}
-                        className="cell"
-                        style={{ width: "100px" , cursor:"pointer",fontSize:"0.7rem"}}
-                        onDragOver={handleDragOver}
-                        onClick={() => {
-                          const newTableCells = [...tableCells];
-                          newTableCells[rowIndex][columnIndex] = "";
-                          setTableCells(newTableCells);
-                        }}
-                        onDrop={(event) =>
-                          handleDrop(event, rowIndex, columnIndex)
-                        }
-                      >
-                        {cell}
-                      </td>
-                    ))}
-                  </tr>
+            <nav className="sidebar ">
+              <ul className="d-flex justify-content-around flex-column h-100">
+                {SidebarData.map((item, index) => (
+                  <li
+                    key={index}
+                    draggable={true}
+                    onDragStart={(event) => handleDragStart(event, item.title)}
+                  >
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ cursor: "pointer" }}
+                    >
+                      {item.icon}&nbsp;{item.title}
+                    </div>
+                  </li>
                 ))}
-              </tbody>
-            </table>
+              </ul>
+            </nav>
+
+            <div
+              style={{
+                flex: 1,
+                overflowX: "scroll",
+                overflowY: "scroll",
+              }}
+            >
+              <table
+                style={{ height: "100%", width: "250vw", tableLayout: "fixed" }}
+              >
+                <tbody>
+                  {tableCells.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {row.map((cell, columnIndex) => (
+                        <td
+                          key={columnIndex}
+                          className="cell"
+                          style={{
+                            width: "100px",
+                            cursor: "pointer",
+                            fontSize: "0.7rem",
+                          }}
+                          onDragOver={handleDragOver}
+                          onClick={() => {
+                            const newTableCells = [...tableCells];
+                            console.log(newTableCells[rowIndex][columnIndex]);
+                            if (
+                              !newTableCells[rowIndex][columnIndex].props.style
+                            ) {
+                              newTableCells[rowIndex][columnIndex] = "";
+                              setTableCells(newTableCells);
+                              for (let i = rowIndex + 1; i < 30; i++) {
+                                const item3 = "";
+                                newTableCells[i][columnIndex] = item3;
+                                setTableCells(newTableCells);
+                              }
+                            }
+                          }}
+                          onDrop={(event) =>
+                            handleDrop(event, rowIndex, columnIndex)
+                          }
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <FileTree />
           </div>
-          <FileTree />
+          <BottomBar />
         </div>
-        <BottomBar />
-        </div>
-        </Router>
+      </Router>
     </>
   );
 }
