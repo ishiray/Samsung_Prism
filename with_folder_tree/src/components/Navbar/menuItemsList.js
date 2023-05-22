@@ -4,18 +4,67 @@ export const menuItemsList = [
     url: '/',
     submenu: [
       {
-        title: 'Workspace',
-        // url: '/workspace',
+        title: 'New',
+      },
+      {
+        title: 'Open',
+      },
+      {
+        title: 'Save',
+      },
+      {
+        title: 'Save As',
+      },
+      {
+        title: 'Close',
       },
     ],
   },
   {
     title: 'Edit',
     // url: '/',
+    submenu: [
+      {
+        title: 'Undo',
+      },
+      {
+        title: 'Redo',
+      },
+      {
+        title: 'Cut',
+      },
+      {
+        title: 'Copy',
+      },
+      {
+        title: 'Paste',
+      },
+      {
+        title: 'Delete Testcase',
+      },
+      {
+        title: 'Select All',
+      },
+    ],
   },
   {
     title: 'Run',
     // url: '/',
+    submenu: [
+      {
+        title: 'Build',
+      },
+      {
+        title: 'Build Multiple',
+      },
+      {
+        title: 'Build Multiple and Export',
+      },
+      {
+        title: 'Run',
+      },
+      
+    ],
   },
   {
     title: 'Configuration',
@@ -117,16 +166,47 @@ export const menuItemsList = [
   {
     title: 'Result',
     // url: '/',
+    submenu: [
+      {
+        title: 'Graphical View',
+      },
+      {
+        title: 'Message Log View',
+      },
+      {
+        title: 'Message Statistical View',
+      },
+      {
+        title: 'Delete Result',
+      },
+      
+    ],
     
   },
   {
     title: 'Windows',
     // url: '/',
+    submenu: [
+      {
+        title: 'Cascade',
+      },
+      {
+        title: 'Close All',
+      },
+    ],
     
   },
   {
     title: 'Help',
     // url: '/',
+    submenu: [
+      {
+        title: 'About',
+      },
+      {
+        title: 'User Guide',
+      },
+    ],
     
   }
 ];
