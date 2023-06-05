@@ -55,6 +55,7 @@ const Navbar = () => {
           console.log('Pushing ',profile["sim_name"]);
           menuItemsList[confIndex]["submenu"][profsimIndex]["submenu"].push({
             title: profile["sim_name"],
+            onclick: "profileMenuDisplay"
             // url: '/',
           })
         }

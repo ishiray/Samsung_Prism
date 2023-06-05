@@ -7,7 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function App() {
 
-  const [loggedIn, setLoggedIn] =useState(true);
+  const [loggedIn, setLoggedIn] =useState(false);
   const regToApp = (regData) => {
     setLoggedIn(regData)
   }
