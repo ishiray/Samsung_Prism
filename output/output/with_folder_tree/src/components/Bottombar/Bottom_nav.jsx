@@ -22,7 +22,7 @@ export default function BottomNav() {
             <a
               className="nav-link active py-0"
               aria-current="page"
-              // href="/"
+              //href="/"
             >
               <button
                 style={{ border: 0, backgroundColor: "transparent" ,color:"black"}}

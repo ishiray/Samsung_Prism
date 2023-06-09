@@ -7,17 +7,22 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function App() {
 
-  const [loggedIn, setLoggedIn] =useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const regToApp = (regData) => {
     setLoggedIn(regData)
   }
 
   return (
-    <DndProvider backend = {HTML5Backend}>
+    // <DndProvider backend = {HTML5Backend}>
+    // <div>
+    //   {loggedIn ? 
+    //   <Simulator /> : <Registration regToApp={regToApp}/>}
+    // </div>
+    // </DndProvider>
     <div>
-      {loggedIn ? 
-      <Simulator /> : <Registration regToApp={regToApp}/>}
+      
+      <Simulator /> 
+      
     </div>
-    </DndProvider>
   );
 }

@@ -68,7 +68,7 @@ export const menuItemsList = [
   },
   {
     title: 'Configuration',
-     url: '/',
+     //url: '/',
     submenu: [
       {
         title: 'Application',
@@ -76,7 +76,7 @@ export const menuItemsList = [
       },
       {
         title: 'Profile Simulators',
-        // url: '/',
+        //url: '/',
         submenu: [
           /*
           {

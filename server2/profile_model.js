@@ -3,8 +3,8 @@ const Pool = require('pg').Pool
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'Prism',
-  password: 'Mansivjain@00',
+  database: 'Prism_trial_db',
+  password: 'test123',
   port: 5432,
 });
 

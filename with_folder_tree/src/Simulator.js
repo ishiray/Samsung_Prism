@@ -20,6 +20,8 @@ import { SidebarData } from "./components/Sidebar/sidebarData";
 import { useState } from "react";
 
 function Simulator() {
+  const [arrowLocation,setArrowLocation] = useState(null)
+  
   console.log(document.getElementById("main").className);
   document.getElementById("main").classList.remove("auth");
   document.getElementById("main").classList.add("simulator");
@@ -136,7 +138,7 @@ function Simulator() {
                             const newTableCells = [...tableCells];
                             console.log(newTableCells[rowIndex][columnIndex]);
                             if (
-                              !newTableCells[rowIndex][columnIndex].props.style
+                              !newTableCells[rowIndex][columnIndex]?.props?.style
                             ) {
                               newTableCells[rowIndex][columnIndex] = "";
                               setTableCells(newTableCells);
@@ -146,6 +148,27 @@ function Simulator() {
                                 setTableCells(newTableCells);
                               }
                             }
+
+                            // Arrow generation
+                            if(!arrowLocation){
+                              setArrowLocation({
+                                start:{
+                                  row: rowIndex,
+                                  column: columnIndex,
+                                }
+                              })
+                              console.log("the arrow begins at"+rowIndex+" "+columnIndex)
+                            }else{
+                              setArrowLocation({
+                                ...arrowLocation,
+                                end: {
+                                  row: arrowLocation.start.row,
+                                  column: columnIndex,
+                                }
+                              })
+                              console.log("the arrow ends at"+arrowLocation.start.row+" "+columnIndex)
+                            }
+                              
                           }}
                           onDrop={(event) =>
                             handleDrop(event, rowIndex, columnIndex)

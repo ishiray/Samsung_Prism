@@ -2,9 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import Dropdown from './Dropdown';
 import "./Navbar.css";
 import { Link } from 'react-router-dom';
+import { Button, Modal } from 'react-bootstrap';
 
 const MenuItems = ({ items, depthLevel }) => {
   const [dropdown, setDropdown] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [Profile, setProfile] = useState(false);
+  const [parameter1, setParameter1] = useState("");
+  const [parameter2, setParameter2] = useState("");
 
   let ref = useRef();
 
@@ -28,7 +33,8 @@ const MenuItems = ({ items, depthLevel }) => {
   }, [dropdown]);
 
   const onMouseEnter = () => {
-    window.innerWidth > 960 && setDropdown(true);
+    if(!showProfileModal){
+    window.innerWidth > 960 && setDropdown(true);}
   };
 
   const onMouseLeave = () => {
@@ -37,6 +43,18 @@ const MenuItems = ({ items, depthLevel }) => {
 
   const closeDropdown = () => {
     dropdown && setDropdown(false);
+  };
+
+  const handleLeafClick = () => {
+    // Call your function here
+    // Example: perform some action or show a modal
+    console.log('Button clicked');
+    setProfile(items.title);
+    setShowProfileModal(true);
+  };
+  const handleCloseProfileModal = () => {
+    console.log("The params are "+parameter1+parameter2)
+    setShowProfileModal(false);
   };
 
   return (
@@ -96,9 +114,50 @@ const MenuItems = ({ items, depthLevel }) => {
             dropdown={dropdown}
           />
         </>
-      ) : (
-        <Link to={items.url}>{items.title}</Link>
-      )}
+      ) : items.onclick === "profileMenuDisplay" ? (
+        <button type="button" onClick={handleLeafClick}>
+          {items.title}
+        </button>
+      ):
+      (<Link to={items.url}>{items.title}</Link>)
+      }
+    <Modal show={showProfileModal} onHide={handleCloseProfileModal}>
+      <Modal.Header closeButton>
+          <Modal.Title>{Profile}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <div className="form-group">
+              <label htmlFor="parameter1">Parameter 1:</label>
+              <input
+                type="text"
+                id="parameter1"
+                name="parameter1"
+                className="form-control"
+                value={parameter1}
+                onChange={(e) => setParameter1(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="parameter2">Parameter 2:</label>
+              <input
+                type="text"
+                id="parameter2"
+                name="parameter2"
+                className="form-control"
+                value={parameter2}
+                onChange={(e) => setParameter2(e.target.value)}
+              />
+            </div>
+          </form>
+        </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseProfileModal}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
     </li>
   );
 };
