@@ -3,16 +3,26 @@ import Dropdown from './Dropdown';
 import "./Navbar.css";
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import Table from './table';
 
 const MenuItems = ({ items, depthLevel }) => {
   const [dropdown, setDropdown] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [Profile, setProfile] = useState(false);
+  const [profileName, setProfileName] = useState("");
   const [parameter1, setParameter1] = useState("");
   const [parameter2, setParameter2] = useState("");
 
-  let ref = useRef();
+  const data = [
+    { column1: 'T3410', column2: '15' },
+    { column1: 'T3411', column2: '10' },
+    { column1: 'T3415', column2: '5' },
+    { column1: 'T3419', column2: '20' },
+  ];
 
+  let ref = useRef();
   useEffect(() => {
     const handler = (event) => {
       if (
@@ -34,7 +44,8 @@ const MenuItems = ({ items, depthLevel }) => {
 
   const onMouseEnter = () => {
     if(!showProfileModal){
-    window.innerWidth > 960 && setDropdown(true);}
+      window.innerWidth > 960 && setDropdown(true);
+    }
   };
 
   const onMouseLeave = () => {
@@ -58,6 +69,7 @@ const MenuItems = ({ items, depthLevel }) => {
   };
 
   return (
+    <>
     <li
       className="menu-items"
       ref={ref}
@@ -121,35 +133,69 @@ const MenuItems = ({ items, depthLevel }) => {
       ):
       (<Link to={items.url}>{items.title}</Link>)
       }
+      
+    </li>
     <Modal show={showProfileModal} onHide={handleCloseProfileModal}>
       <Modal.Header closeButton>
           <Modal.Title>{Profile}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form>
-            <div className="form-group">
-              <label htmlFor="parameter1">Parameter 1:</label>
-              <input
-                type="text"
-                id="parameter1"
-                name="parameter1"
-                className="form-control"
-                value={parameter1}
-                onChange={(e) => setParameter1(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="parameter2">Parameter 2:</label>
-              <input
-                type="text"
-                id="parameter2"
-                name="parameter2"
-                className="form-control"
-                value={parameter2}
-                onChange={(e) => setParameter2(e.target.value)}
-              />
+            <div>
+              <label htmlFor="profileName">Profile Name:</label>
+                  <input
+                    type="text"
+                    id="profileName"
+                    name="profileName"
+                    className="form-control"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                />
             </div>
           </form>
+          <br></br>
+          <div className="tabs">
+            <Tabs>
+              <TabList className="tabs-row">
+                <Tab className="tab-item">General Configuration</Tab>
+                <Tab className="tab-item" disabled>NE</Tab>
+                <Tab className="tab-item">Timer</Tab>
+              </TabList>
+
+              <TabPanel>
+                <form>
+                  <div className="form-group">
+                    <label htmlFor="parameter1">MCC:</label>
+                    <input
+                      type="text"
+                      id="parameter1"
+                      name="parameter1"
+                      className="form-control"
+                      value={parameter1}
+                      onChange={(e) => setParameter1(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="parameter2">MNC:</label>
+                    <input
+                      type="text"
+                      id="parameter2"
+                      name="parameter2"
+                      className="form-control"
+                      value={parameter2}
+                      onChange={(e) => setParameter2(e.target.value)}
+                    />
+                  </div>
+                </form>
+              </TabPanel>
+              <TabPanel>
+                <h2>in progress...</h2>
+              </TabPanel>
+              <TabPanel>
+                <Table data={data} />
+              </TabPanel>
+            </Tabs>
+          </div>
         </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseProfileModal}>
@@ -157,8 +203,7 @@ const MenuItems = ({ items, depthLevel }) => {
         </Button>
       </Modal.Footer>
     </Modal>
-
-    </li>
+    </>
   );
 };
 
