@@ -10,17 +10,30 @@ import Table from './table';
 const MenuItems = ({ items, depthLevel }) => {
   const [dropdown, setDropdown] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [Profile, setProfile] = useState(false);
+  const [Sim, setSim] = useState(false);
+  const [Sut,setSut] = useState('MME');
+  const [ptclID,setPtclID]=useState();
+  const [intfID,setIntfID]=useState();
+
   const [profileName, setProfileName] = useState("");
   const [parameter1, setParameter1] = useState("");
   const [parameter2, setParameter2] = useState("");
-
-  const data = [
-    { column1: 'T3410', column2: '15' },
-    { column1: 'T3411', column2: '10' },
-    { column1: 'T3415', column2: '5' },
-    { column1: 'T3419', column2: '20' },
-  ];
+  const [formData, setFormData] = useState({});
+  
+  const inputFields = {
+    'General Configuration': [
+      { config_param_name: 'MNC', default_value: null },
+      { config_param_name: 'MCC', default_value: null },
+      { config_param_name: 'MPC', default_value: null }
+    ],
+    'NE': [],
+    'Timer': [
+      { config_param_name: 'T3410', default_value: '15' },
+      { config_param_name: 'T3416', default_value: '30' },
+      { config_param_name: 'T3411', default_value: '10' },
+      { config_param_name: 'T3440', default_value: '10' }
+    ]
+  };
 
   let ref = useRef();
   useEffect(() => {
@@ -60,12 +73,77 @@ const MenuItems = ({ items, depthLevel }) => {
     // Call your function here
     // Example: perform some action or show a modal
     console.log('Button clicked');
-    setProfile(items.title);
+    setSim(items.title);
+    getModalParams();
     setShowProfileModal(true);
   };
+
   const handleCloseProfileModal = () => {
     console.log("The params are "+parameter1+parameter2)
     setShowProfileModal(false);
+  };
+
+  async function getIDs() {
+    try {
+      const response = await fetch('http://localhost:3001/simList');
+      const data = await response.json();
+      console.log('The data is ', data);
+      setPtclID(data.ptcl_id);
+      setIntfID(data.intf_id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  async function getInputs(label) {
+    try {
+      let controlLabel = label;
+      await getIDs(); // Wait for getIDs to complete and set ptclID and intfID
+      const response = await fetch(`http://localhost:3001/getProfileInputs?intf_id=${intfID}&ptcl_id=${ptclID}&control_label=${controlLabel}`);
+      const data = await response.json();
+      console.log('The data is ', data);
+      inputFields[label] = data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  const getModalParams = async () => {
+    console.log("Inside getModalParams");
+    try {
+      // Use that to get the input fields
+      // For general configuration
+      await getInputs('General Configuration');
+      await getInputs('NE');
+      await getInputs('Timer');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleInputChange = (e, configParamName) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [configParamName]: e.target.value
+    }));
+  };
+
+  const renderTextFields = (tab) => {
+    const fields = inputFields[tab]; 
+
+    return fields.map((field) => (
+      <div className="form-group" key={field.config_param_name}>
+        <label htmlFor={field.config_param_name}>{field.config_param_name}:</label>
+        <input
+          type="text"
+          id={field.config_param_name}
+          name={field.config_param_name}
+          className="form-control"
+          value={formData[field.config_param_name] || ''}
+          onChange={(e) => handleInputChange(e, field.config_param_name)}
+        />
+      </div>
+    ));
   };
 
   return (
@@ -137,7 +215,7 @@ const MenuItems = ({ items, depthLevel }) => {
     </li>
     <Modal show={showProfileModal} onHide={handleCloseProfileModal}>
       <Modal.Header closeButton>
-          <Modal.Title>{Profile}</Modal.Title>
+          <Modal.Title>{Sim}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form>
@@ -158,41 +236,22 @@ const MenuItems = ({ items, depthLevel }) => {
             <Tabs>
               <TabList className="tabs-row">
                 <Tab className="tab-item">General Configuration</Tab>
-                <Tab className="tab-item" disabled>NE</Tab>
+                <Tab className="tab-item">NE</Tab>
                 <Tab className="tab-item">Timer</Tab>
               </TabList>
 
               <TabPanel>
                 <form>
-                  <div className="form-group">
-                    <label htmlFor="parameter1">MCC:</label>
-                    <input
-                      type="text"
-                      id="parameter1"
-                      name="parameter1"
-                      className="form-control"
-                      value={parameter1}
-                      onChange={(e) => setParameter1(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="parameter2">MNC:</label>
-                    <input
-                      type="text"
-                      id="parameter2"
-                      name="parameter2"
-                      className="form-control"
-                      value={parameter2}
-                      onChange={(e) => setParameter2(e.target.value)}
-                    />
-                  </div>
+                  {renderTextFields('General Configuration')}
                 </form>
               </TabPanel>
               <TabPanel>
-                <h2>in progress...</h2>
+                <form>
+                  {renderTextFields('NE')}
+                </form>
               </TabPanel>
               <TabPanel>
-                <Table data={data} />
+                <Table data={inputFields['Timer']} />
               </TabPanel>
             </Tabs>
           </div>

@@ -30,7 +30,7 @@ import { menuItemsList } from './menuItemsList';
 const Navbar = () => {
 
   async function getProfileNames() {
-    fetch('http://localhost:3001/profileList')
+    fetch('http://localhost:3001/simList')
       .then(response => {
         return response.json();
       })
