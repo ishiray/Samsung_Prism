@@ -100,42 +100,21 @@ app.get('/get-directory-contents',(req,res)=>{
     if(err){
         console.error(err);
     }else{
-        
-        var directoryList=[];
-        var txtfilesList=[];
-        console.log('all files',files);
-        try{
-            files.forEach((file)=>{
-            const filePath=path.join(finalPath,file)
-            fs.stat(filePath,(err,stats)=>{
-                if(err){
-                    console.log(err)
-                }else{
-                    if(stats.isDirectory()){
-                        directoryList.push(file)
-                    }
-                }
-            })
-        })
-        }catch(err){
-            console.error(err);
+        const folders = [];
+      const textFiles = [];
+
+      files.forEach((file) => {
+        const filePath = path.join(finalPath, file);
+        const fileStats = fs.statSync(filePath);
+
+        if (fileStats.isDirectory()) {
+          folders.push(file);
+        } else if (fileStats.isFile() && path.extname(file).toLowerCase() === '.txt') {
+          textFiles.push(file);
         }
+      });
 
-        console.log('all directories',directoryList)
-        const txtFiles = files.filter((file) => file.endsWith('.txt'));
-        
-        txtFiles.forEach(file=>{
-            txtfilesList.push(file);
-        })
-        
-        txtfilesList=txtfilesList.map((file)=>
-            path.basename(path.join(pathadd,file),'.txt')
-        )
-        console.log('all text files',txtfilesList)
-
-        return res.status(200).json({ directoryList,
-        txtfilesList 
-        })
+      return res.status(200).json({ folders, textFiles });
 
     }
 
