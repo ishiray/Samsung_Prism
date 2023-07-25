@@ -122,6 +122,30 @@ app.get('/get-directory-contents',(req,res)=>{
 
 })
 
+app.post('/enter-directory',(req,res)=>{
+  const newPathHead=req.body.path;
+  pathadd=path.join(pathadd,pathHead);
+  console.log('new base path', pathadd);
+  pathHead=newPathHead;
+  console.log(' new path head',pathHead)
+  res.status(200).json({success:" path updated"})
+})
+
+app.put("/parent-directory", function (req, res) {
+  const tempPath=path.dirname(pathadd);
+  pathHead='';
+  for (let index = tempPath.length; index < pathadd.length; index++) {
+    pathHead += pathadd[index];
+  }
+  console.log(pathHead)
+  pathadd=tempPath;
+  console.log(pathadd)
+    
+  res.json({ finalPath: path.join(pathadd,pathHead) });
+});
+
+
+
 
 // port can be changed accordingly
 app.listen(5000,()=>{
