@@ -1,0 +1,263 @@
+	 Programmable Test Environment for Telecommunication Systems- Application Log
+
+
+[TRACE LOG ]:
+Mon Dec 06 16:13:58 IST 2021
+[java.lang.Object]: Time = 1638787438405
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Mon Dec 06 16:13:58 IST 2021
+[java.lang.Object]: Time = 1638787438412
+DriverManager.getConnection
+
+[Warning]:
+Mon Dec 06 16:13:59 IST 2021
+New DB Connection created
+
+[TRACE LOG ]:
+Mon Dec 06 16:13:59 IST 2021
+[java.lang.Object]: Time = 1638787439285
+return m_conn
+
+[Information]:
+Mon Dec 06 16:14:11 IST 2021
+Database connection closed
+
+[Information]:
+Fri Apr 07 15:16:01 IST 2023
+The Database Spec is not provided
+
+[TRACE LOG ]:
+Fri Apr 07 15:16:37 IST 2023
+[java.lang.Object]: Time = 1680860797035
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 15:16:37 IST 2023
+[java.lang.Object]: Time = 1680860797159
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 15:16:58 IST 2023
+Could not connect to the database =//10.251.219.227:5432/ngc_rel15_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 15:17:01 IST 2023
+[java.lang.Object]: Time = 1680860821769
+return m_conn
+
+[Error]:
+Fri Apr 07 15:17:01 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Fri Apr 07 15:17:09 IST 2023
+[java.lang.Object]: Time = 1680860829423
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 15:17:09 IST 2023
+[java.lang.Object]: Time = 1680860829423
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 15:17:30 IST 2023
+Could not connect to the database =//10.251.219.227:5432/epc_rel15_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 15:17:32 IST 2023
+[java.lang.Object]: Time = 1680860852975
+return m_conn
+
+[Error]:
+Fri Apr 07 15:17:32 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Fri Apr 07 15:17:39 IST 2023
+[java.lang.Object]: Time = 1680860859028
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 15:17:39 IST 2023
+[java.lang.Object]: Time = 1680860859028
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 15:18:00 IST 2023
+Could not connect to the database =//10.251.219.227:5432/epc_rel16_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 15:18:01 IST 2023
+[java.lang.Object]: Time = 1680860881584
+return m_conn
+
+[Error]:
+Fri Apr 07 15:18:01 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Fri Apr 07 15:18:10 IST 2023
+[java.lang.Object]: Time = 1680860890892
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 15:18:10 IST 2023
+[java.lang.Object]: Time = 1680860890892
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 15:18:31 IST 2023
+Could not connect to the database =//10.251.219.227:5432/epc_rel16_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 15:20:52 IST 2023
+[java.lang.Object]: Time = 1680861052968
+return m_conn
+
+[Error]:
+Fri Apr 07 15:20:52 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Fri Apr 07 15:21:33 IST 2023
+[java.lang.Object]: Time = 1680861093475
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 15:21:33 IST 2023
+[java.lang.Object]: Time = 1680861093479
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 15:21:54 IST 2023
+Could not connect to the database =//10.251.219.227:5432/ngc_rel15_dec_spec_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 15:21:56 IST 2023
+[java.lang.Object]: Time = 1680861116809
+return m_conn
+
+[Error]:
+Fri Apr 07 15:21:56 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Fri Apr 07 15:24:01 IST 2023
+[java.lang.Object]: Time = 1680861241909
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 15:24:01 IST 2023
+[java.lang.Object]: Time = 1680861241912
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 15:24:22 IST 2023
+Could not connect to the database =//10.251.219.227:5432/sgsndb, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 15:25:13 IST 2023
+[java.lang.Object]: Time = 1680861313200
+return m_conn
+
+[Error]:
+Fri Apr 07 15:25:13 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Fri Apr 07 16:20:50 IST 2023
+[java.lang.Object]: Time = 1680864650115
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Fri Apr 07 16:20:50 IST 2023
+[java.lang.Object]: Time = 1680864650246
+DriverManager.getConnection
+
+[Error]:
+Fri Apr 07 16:21:11 IST 2023
+Could not connect to the database =//10.251.219.227:5432/ngc_rel15_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Fri Apr 07 16:26:28 IST 2023
+[java.lang.Object]: Time = 1680864988792
+return m_conn
+
+[Error]:
+Fri Apr 07 16:26:28 IST 2023
+Could not establish database connection: DB Object null
+
+[Information]:
+Tue Apr 11 17:54:53 IST 2023
+The Database Spec is not provided
+
+[TRACE LOG ]:
+Tue Apr 11 17:54:58 IST 2023
+[java.lang.Object]: Time = 1681215898111
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Tue Apr 11 17:54:58 IST 2023
+[java.lang.Object]: Time = 1681215898191
+DriverManager.getConnection
+
+[Error]:
+Tue Apr 11 17:55:19 IST 2023
+Could not connect to the database =//10.251.219.227:5432/ngc_rel15_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Tue Apr 11 17:55:26 IST 2023
+[java.lang.Object]: Time = 1681215926186
+return m_conn
+
+[Error]:
+Tue Apr 11 17:55:26 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Tue Apr 11 18:31:32 IST 2023
+[java.lang.Object]: Time = 1681218092025
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Tue Apr 11 18:31:32 IST 2023
+[java.lang.Object]: Time = 1681218092029
+DriverManager.getConnection
+
+[Error]:
+Tue Apr 11 18:31:53 IST 2023
+Could not connect to the database =//10.251.219.227:5432/ngc_rel15_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Tue Apr 11 18:32:09 IST 2023
+[java.lang.Object]: Time = 1681218129702
+return m_conn
+
+[Error]:
+Tue Apr 11 18:32:09 IST 2023
+Could not establish database connection: DB Object null
+
+[TRACE LOG ]:
+Mon May 01 01:32:11 IST 2023
+[java.lang.Object]: Time = 1682884931718
+org.postgresql.Driver
+
+[TRACE LOG ]:
+Mon May 01 01:32:11 IST 2023
+[java.lang.Object]: Time = 1682884931814
+DriverManager.getConnection
+
+[Error]:
+Mon May 01 01:32:33 IST 2023
+Could not connect to the database =//10.251.219.227:5432/ngc_rel15_db, login=postgres, Pwd=epc123
+
+[TRACE LOG ]:
+Mon May 01 01:32:49 IST 2023
+[java.lang.Object]: Time = 1682884969041
+return m_conn
+
+[Error]:
+Mon May 01 01:32:49 IST 2023
+Could not establish database connection: DB Object null
