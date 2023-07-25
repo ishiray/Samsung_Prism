@@ -2,7 +2,7 @@ import React from "react";
 import icon from "./icon.png";
 import "./Navbar.css";
 import NavbarButton from "./NavbarButton";
-import {useState} from 'react';
+import { useState } from "react";
 
 import { FaFileExcel } from "react-icons/fa";
 import { FaFolderOpen } from "react-icons/fa";
@@ -24,60 +24,60 @@ import { BsTools } from "react-icons/bs";
 
 import { Nav, NavLink, Bars, NavMenu } from "./NavbarElements";
 import "./Navbar.css";
-import MenuItems from './MenuItems';
-import { menuItemsList } from './menuItemsList';
+import MenuItems from "./MenuItems";
+import { menuItemsList } from "./menuItemsList";
 
 const Navbar = () => {
-
   async function getProfileNames() {
-    fetch('http://localhost:3001/simList')
-      .then(response => {
+    fetch("http://localhost:3001/simList")
+      .then((response) => {
         return response.json();
       })
-      .then(data => {
-        console.log('The data is ',data);
-        var profList=[];
+      .then((data) => {
+        console.log("The data is ", data);
+        var profList = [];
         //get index of configuration tab in menuItemsList
         var confIndex;
         var profsimIndex;
-        for(confIndex = 0; confIndex < menuItemsList.length; confIndex++){
-          if (menuItemsList[confIndex]["title"]==='Configuration'){
+        for (confIndex = 0; confIndex < menuItemsList.length; confIndex++) {
+          if (menuItemsList[confIndex]["title"] === "Configuration") {
             break;
           }
         }
-        for(profsimIndex = 0; profsimIndex < menuItemsList[confIndex]["submenu"].length; profsimIndex++){
-          if (menuItemsList[confIndex]["submenu"][profsimIndex]["title"]==='Profile Simulators'){
+        for (
+          profsimIndex = 0;
+          profsimIndex < menuItemsList[confIndex]["submenu"].length;
+          profsimIndex++
+        ) {
+          if (
+            menuItemsList[confIndex]["submenu"][profsimIndex]["title"] ===
+            "Profile Simulators"
+          ) {
             break;
           }
         }
-        for(let profile of data){
+        for (let profile of data) {
           profList.push(profile["sim_name"]);
-          console.log('Pushing ',profile["sim_name"]);
+          console.log("Pushing ", profile["sim_name"]);
           menuItemsList[confIndex]["submenu"][profsimIndex]["submenu"].push({
             title: profile["sim_name"],
-            onclick: "profileMenuDisplay"
+            onclick: "profileMenuDisplay",
             // url: '/',
-          })
+          });
         }
-        console.log('This is the profiles list ',profList);
-        console.log('This is the new menuItemsList ',menuItemsList);
+        console.log("This is the profiles list ", profList);
+        console.log("This is the new menuItemsList ", menuItemsList);
       });
   }
-  
-  getProfileNames();
-  
+
+  // getProfileNames();
+
   return (
     <nav>
       <ul className="menus">
         {menuItemsList.map((menu, index) => {
           const depthLevel = 0;
-          return (
-            <MenuItems
-              items={menu}
-              key={index}
-              depthLevel={depthLevel}
-            />
-          );
+          return <MenuItems items={menu} key={index} depthLevel={depthLevel} />;
         })}
       </ul>
       <Nav>

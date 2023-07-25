@@ -60,12 +60,87 @@ app.listen(port, () => {
 })
 
 
-app.get('/profileList', (req, res) => {
-  profile_model.getProfiles()
+app.get('/simList', (req, res) => {
+  profile_model.getSims()
   .then(response => {
     res.status(200).send(response);
   })
   .catch(error => {
+    res.status(500).send(error);
+  })
+})
+
+app.get('/selectiveSimList', (req, res) => {
+  console.log("received request is "+req.query.sut)
+  profile_model.getSelectiveSims(req.query)
+  .then(response => {
+    //console.log(response)
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    //console.log(error)
+    res.status(500).send(error);
+  })
+})
+
+app.get('/sutList', (req, res) => {
+  profile_model.getSuts()
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+})
+
+app.get('/getPtclIntfID', (req, res) => {
+  console.log("received request is "+req.query.sut+" and "+req.query.sim)
+  profile_model.getPtclIntfID(req.query)
+  .then(response => {
+    //console.log(response)
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    //console.log(error)
+    res.status(500).send(error);
+  })
+})
+
+app.get('/getMsgNameList', (req, res) => {
+  console.log("received request is "+req.query.ptcl_id)
+  profile_model.getMsgNameList(req.query)
+  .then(response => {
+    //console.log(response)
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    //console.log(error)
+    res.status(500).send(error);
+  })
+})
+
+app.get('/getMsgXsd', (req, res) => {
+  console.log("received request is "+req.query.msg_xsd_id)
+  profile_model.getMsgXsd(req.query)
+  .then(response => {
+    //console.log(response)
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    //console.log(error)
+    res.status(500).send(error);
+  })
+})
+
+app.get('/getProfileInputs', (req, res) => {
+  console.log("received request is "+req.query.intf_id+req.query.ptcl_id+req.query.control_label)
+  profile_model.getProfileInputs(req.query)
+  .then(response => {
+    //console.log(response)
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    //console.log(error)
     res.status(500).send(error);
   })
 })
