@@ -17,7 +17,12 @@ import DataTransfer from "./pages/DataTransfer";
 import FileTree from "./components/FileTree/filetree";
 import Home from "./pages/Home";
 import { SidebarData } from "./components/Sidebar/sidebarData";
+import { Menu, Item, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+
 let clicks = 0;
 let st = "";
 let en = "";
@@ -32,22 +37,27 @@ const SVGContainer = ({
   setEndY,
   setStartX,
   setStartY,
+  setShowMessageModal,
   y,
+  currentObjectType,
+  setCurrentObjectType,
 }) => {
   const [rectangles, setRectangles] = useState([]);
 
   let dragOnGoing = false;
   const handleDrop = (event) => {
     event.preventDefault();
-    const itemName = event.dataTransfer.getData("text/plain");
+    const itemName1 = event.dataTransfer.getData("text/plain");
+    const itemName = currentObjectType;
     const rect = event.target.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = 22;
 
     setRectangles((prevRectangles) => [
       ...prevRectangles,
-      { name: itemName, x, y },
+      { name: itemName1 == "SUT" ? "MME" : itemName, x, y },
     ]);
+    setCurrentObjectType("");
   };
 
   const handleDragOver = (event) => {
@@ -88,9 +98,11 @@ const SVGContainer = ({
       s = x;
       setStartY(event.clientY - 69);
       y = event.clientY - 69;
+      console.log("Message start co-ordinates are x: " + s + " y: " + y);
       document.addEventListener("mousemove", (e) => handleMouseMove(e, clicks));
       dragOnGoing = true;
     } else {
+      console.log("Message end co-ordinates are x: " + endX + " y: " + endY);
       document.removeEventListener("mousemove", (e) =>
         handleMouseMove(e, clicks)
       );
@@ -121,15 +133,15 @@ const SVGContainer = ({
               x={rectangle.x}
               y={rectangle.y}
               width="100"
-              height="50"
-              fill="#de4e4e"
+              height="30"
+              fill={rectangle.name === "MME" ? "#de4e4e" : "#253c9d"}
               onContextMenu={() => handleRectangleRightClick(index)} // Handle right-click on rectangle
             />
             <text
               x={rectangle.x + 10}
-              y={rectangle.y + 30}
+              y={rectangle.y + 20}
               fill="white"
-              fontWeight="bold">
+              fontWeight="">
               {rectangle.name}
             </text>
             <line
@@ -139,7 +151,7 @@ const SVGContainer = ({
                 handleLineClick(e, rectangle.x + 50, rectangle.name)
               }
               x1={rectangle.x + 50}
-              y1={rectangle.y + 50}
+              y1={rectangle.y + 30}
               x2={rectangle.x + 50}
               y2="500"
               stroke="black"
@@ -152,23 +164,86 @@ const SVGContainer = ({
             y1={startY}
             x2={endX}
             y2={endY}
+            onDoubleClick={(e) => {
+              setShowMessageModal(true);
+            }}
+            style={{ cursor: "pointer" }}
             stroke="black"
             strokeWidth="1"></line>
-          <polygon
-            // x={endX}
-            // y={endY}
-            points={`${endX},${endY + 5} ${endX},${endY - 5} ${
-              endX >= startX ? endX + 5 : endX - 5
-            },${endY}`}
-            fill="black"
-            stroke="black"
-            strokeWidth="2"
-          />
+          {endX && startX && (
+            <polygon
+              // x={endX}
+              // y={endY}
+              points={`${endX},${endY + 5} ${endX},${endY - 5} ${
+                endX >= startX ? endX + 5 : endX - 5
+              },${endY}`}
+              fill="black"
+              stroke="black"
+              strokeWidth="2"
+            />
+          )}
         </>
       </svg>
     </div>
   );
 };
+function MyVerticallyCenteredModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+      <Modal.Header centered closeButton>
+        <div style={{ margin: "auto", fontSize: "0.7rem" }}>
+          Message Name:
+          <select style={{ margin: "5px" }}>
+            <option value="1">CELL_TRAFFIC_TRACE</option>
+          </select>
+        </div>
+      </Modal.Header>
+      <Modal.Body style={{ padding: "0" }}>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              width: "50%",
+              height: "450px",
+              borderRight: "1px solid black",
+            }}>
+            folder tree
+          </div>
+          <div
+            style={{
+              width: "50%",
+              height: "450px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <div style={{ fontSize: "0.7rem" }}>
+              <p style={{ color: "black", margin: "0" }}>
+                Name: Procedure_Code
+              </p>
+              <p style={{ color: "black", margin: "0" }}>
+                Parent: Message_Type
+              </p>
+              <p style={{ color: "black", margin: "0" }}>Data Type: Choice</p>
+              <p style={{ color: "black", margin: "0" }}>Length: None</p>
+              <span style={{ color: "black", margin: "0" }}>Data: </span>
+              <select>
+                <option value="1">Handover_Preparation</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        {/* <Button onClick={props.onHide}>Save</Button> */}
+      </Modal.Footer>
+    </Modal>
+  );
+}
 function Simulator() {
   const [arrowLocation, setArrowLocation] = useState(null);
 
@@ -185,57 +260,73 @@ function Simulator() {
   const [startY, setStartY] = useState(null);
   const [endX, setEndX] = useState(null);
   const [endY, setEndY] = useState(null);
+  const [currentObjectType, setCurrentObjectType] = useState("");
+  const [showMessageModal, setShowMessageModal] = useState(false);
 
   let dragOnGoing = false;
   let y = null;
 
   const handleDragStart = (event, item) => {
+    if (item !== "SUT" && currentObjectType.length === 0) {
+      console.log("first");
+      return null;
+    }
     event.dataTransfer.setData("text/plain", item);
   };
 
-  const handleDragOver = (event) => {
-    event.preventDefault();
+  // const handleDragOver = (event) => {
+  //   event.preventDefault();
+  // };
+
+  // const handleClick = (event) => {
+  //   const word = event.dataTransfer.getData("text/plain");
+  // };
+
+  // const handleDrop = (event, rowIndex, columnIndex) => {
+  //   event.preventDefault();
+  //   const item2 = event.dataTransfer.getData("text/plain");
+  //   const item = (
+  //     <div>
+  //       <div
+  //         style={{
+  //           height: "1.2rem",
+  //           backgroundColor: "#ff000d75",
+  //           paddingRight: "1rem",
+  //         }}>
+  //         <h6 align="center">{item2}</h6>
+  //       </div>
+  //     </div>
+  //   );
+
+  //   const newTableCells = [...tableCells];
+  //   newTableCells[rowIndex][columnIndex] = item;
+  //   for (let i = rowIndex + 1; i < 30; i++) {
+  //     const item3 = (
+  //       <div
+  //         style={{
+  //           height: "100%",
+  //           width: "2px",
+  //           backgroundColor: "#ff000d75",
+  //           marginLeft: "auto",
+  //           marginRight: "auto",
+  //         }}></div>
+  //     );
+  //     newTableCells[i][columnIndex] = item3;
+  //     setTableCells(newTableCells);
+  //   }
+  //   setTableCells(newTableCells);
+  // };
+  const { show } = useContextMenu({
+    id: "MENU_ID",
+  });
+  const handleContextMenu = (event) => {
+    show({
+      event,
+      props: {
+        key: "value",
+      },
+    });
   };
-
-  const handleClick = (event) => {
-    const word = event.dataTransfer.getData("text/plain");
-  };
-
-  const handleDrop = (event, rowIndex, columnIndex) => {
-    event.preventDefault();
-    const item2 = event.dataTransfer.getData("text/plain");
-    const item = (
-      <div>
-        <div
-          style={{
-            height: "1.2rem",
-            backgroundColor: "#ff000d75",
-            paddingRight: "1rem",
-          }}>
-          <h6 align="center">{item2}</h6>
-        </div>
-      </div>
-    );
-
-    const newTableCells = [...tableCells];
-    newTableCells[rowIndex][columnIndex] = item;
-    for (let i = rowIndex + 1; i < 30; i++) {
-      const item3 = (
-        <div
-          style={{
-            height: "100%",
-            width: "2px",
-            backgroundColor: "#ff000d75",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}></div>
-      );
-      newTableCells[i][columnIndex] = item3;
-      setTableCells(newTableCells);
-    }
-    setTableCells(newTableCells);
-  };
-
   return (
     <>
       <Router>
@@ -248,6 +339,86 @@ function Simulator() {
             className="d-flex pb-2 pt-1"
             style={{ width: "100vw", height: "60vh" }}>
             <nav className="sidebar ">
+              <Menu id={"MENU_ID"}>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("UE/EnodeB");
+                  }}>
+                  UE/EnodeB
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("S-GW");
+                  }}>
+                  S-GW
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("MSCServer");
+                  }}>
+                  MSCServer
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("HRPD");
+                  }}>
+                  HRPD
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("PreRSSGSN");
+                  }}>
+                  PreRSSGSN
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("RSSGSN");
+                  }}>
+                  RSSGSN
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("E SMLC");
+                  }}>
+                  E SMLC
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("CBC");
+                  }}>
+                  CBC
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("ONExCSWS");
+                  }}>
+                  ONExCSWS
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("MCE");
+                  }}>
+                  MCE
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("LIADMF");
+                  }}>
+                  LIADMF
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("E GMLC/SMSC");
+                  }}>
+                  E GMLC/SMSC
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("NGNB");
+                  }}>
+                  NGNB
+                </Item>
+              </Menu>
               <ul className="d-flex justify-content-around flex-column h-100">
                 {SidebarData.map((item, index) => (
                   <li
@@ -256,6 +427,9 @@ function Simulator() {
                     onDragStart={(event) => handleDragStart(event, item.title)}>
                     <div
                       className="d-flex align-items-center"
+                      onContextMenu={
+                        item.title === "SUT" ? null : handleContextMenu
+                      }
                       style={{ cursor: "pointer" }}>
                       {item.icon}&nbsp;{item.title}
                     </div>
@@ -274,7 +448,14 @@ function Simulator() {
               setEndX={setEndX}
               setEndY={setEndY}
               y={y}
+              setShowMessageModal={setShowMessageModal}
               clicks={clicks}
+              currentObjectType={currentObjectType}
+              setCurrentObjectType={setCurrentObjectType}
+            />
+            <MyVerticallyCenteredModal
+              show={showMessageModal}
+              onHide={() => setShowMessageModal(false)}
             />
             {/* <div
               style={{

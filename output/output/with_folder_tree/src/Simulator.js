@@ -17,6 +17,8 @@ import DataTransfer from "./pages/DataTransfer";
 import FileTree from "./components/FileTree/filetree";
 import Home from "./pages/Home";
 import { SidebarData } from "./components/Sidebar/sidebarData";
+import { Menu, Item, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 import { useState } from "react";
 let clicks = 0;
 let st = "";
@@ -33,21 +35,25 @@ const SVGContainer = ({
   setStartX,
   setStartY,
   y,
+  currentObjectType,
+  setCurrentObjectType,
 }) => {
   const [rectangles, setRectangles] = useState([]);
 
   let dragOnGoing = false;
   const handleDrop = (event) => {
     event.preventDefault();
-    const itemName = event.dataTransfer.getData("text/plain");
+    const itemName1 = event.dataTransfer.getData("text/plain");
+    const itemName = currentObjectType;
     const rect = event.target.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = 22;
 
     setRectangles((prevRectangles) => [
       ...prevRectangles,
-      { name: itemName, x, y },
+      { name: itemName1 == "SUT" ? "MME" : itemName, x, y },
     ]);
+    setCurrentObjectType("");
   };
 
   const handleDragOver = (event) => {
@@ -88,9 +94,11 @@ const SVGContainer = ({
       s = x;
       setStartY(event.clientY - 69);
       y = event.clientY - 69;
+      console.log("Message start co-ordinates are x: " + s + " y: " + y);
       document.addEventListener("mousemove", (e) => handleMouseMove(e, clicks));
       dragOnGoing = true;
     } else {
+      console.log("Message end co-ordinates are x: " + endX + " y: " + endY);
       document.removeEventListener("mousemove", (e) =>
         handleMouseMove(e, clicks)
       );
@@ -122,7 +130,7 @@ const SVGContainer = ({
               y={rectangle.y}
               width="100"
               height="50"
-              fill="#de4e4e"
+              fill={rectangle.name === "MME" ? "#de4e4e" : "#253c9d"}
               onContextMenu={() => handleRectangleRightClick(index)} // Handle right-click on rectangle
             />
             <text
@@ -154,16 +162,18 @@ const SVGContainer = ({
             y2={endY}
             stroke="black"
             strokeWidth="1"></line>
-          <polygon
-            // x={endX}
-            // y={endY}
-            points={`${endX},${endY + 5} ${endX},${endY - 5} ${
-              endX >= startX ? endX + 5 : endX - 5
-            },${endY}`}
-            fill="black"
-            stroke="black"
-            strokeWidth="2"
-          />
+          {endX && startX && (
+            <polygon
+              // x={endX}
+              // y={endY}
+              points={`${endX},${endY + 5} ${endX},${endY - 5} ${
+                endX >= startX ? endX + 5 : endX - 5
+              },${endY}`}
+              fill="black"
+              stroke="black"
+              strokeWidth="2"
+            />
+          )}
         </>
       </svg>
     </div>
@@ -185,57 +195,72 @@ function Simulator() {
   const [startY, setStartY] = useState(null);
   const [endX, setEndX] = useState(null);
   const [endY, setEndY] = useState(null);
+  const [currentObjectType, setCurrentObjectType] = useState("");
 
   let dragOnGoing = false;
   let y = null;
 
   const handleDragStart = (event, item) => {
+    if (item !== "SUT" && currentObjectType.length === 0) {
+      console.log("first");
+      return null;
+    }
     event.dataTransfer.setData("text/plain", item);
   };
 
-  const handleDragOver = (event) => {
-    event.preventDefault();
+  // const handleDragOver = (event) => {
+  //   event.preventDefault();
+  // };
+
+  // const handleClick = (event) => {
+  //   const word = event.dataTransfer.getData("text/plain");
+  // };
+
+  // const handleDrop = (event, rowIndex, columnIndex) => {
+  //   event.preventDefault();
+  //   const item2 = event.dataTransfer.getData("text/plain");
+  //   const item = (
+  //     <div>
+  //       <div
+  //         style={{
+  //           height: "1.2rem",
+  //           backgroundColor: "#ff000d75",
+  //           paddingRight: "1rem",
+  //         }}>
+  //         <h6 align="center">{item2}</h6>
+  //       </div>
+  //     </div>
+  //   );
+
+  //   const newTableCells = [...tableCells];
+  //   newTableCells[rowIndex][columnIndex] = item;
+  //   for (let i = rowIndex + 1; i < 30; i++) {
+  //     const item3 = (
+  //       <div
+  //         style={{
+  //           height: "100%",
+  //           width: "2px",
+  //           backgroundColor: "#ff000d75",
+  //           marginLeft: "auto",
+  //           marginRight: "auto",
+  //         }}></div>
+  //     );
+  //     newTableCells[i][columnIndex] = item3;
+  //     setTableCells(newTableCells);
+  //   }
+  //   setTableCells(newTableCells);
+  // };
+  const { show } = useContextMenu({
+    id: "MENU_ID",
+  });
+  const handleContextMenu = (event) => {
+    show({
+      event,
+      props: {
+        key: "value",
+      },
+    });
   };
-
-  const handleClick = (event) => {
-    const word = event.dataTransfer.getData("text/plain");
-  };
-
-  const handleDrop = (event, rowIndex, columnIndex) => {
-    event.preventDefault();
-    const item2 = event.dataTransfer.getData("text/plain");
-    const item = (
-      <div>
-        <div
-          style={{
-            height: "1.2rem",
-            backgroundColor: "#ff000d75",
-            paddingRight: "1rem",
-          }}>
-          <h6 align="center">{item2}</h6>
-        </div>
-      </div>
-    );
-
-    const newTableCells = [...tableCells];
-    newTableCells[rowIndex][columnIndex] = item;
-    for (let i = rowIndex + 1; i < 30; i++) {
-      const item3 = (
-        <div
-          style={{
-            height: "100%",
-            width: "2px",
-            backgroundColor: "#ff000d75",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}></div>
-      );
-      newTableCells[i][columnIndex] = item3;
-      setTableCells(newTableCells);
-    }
-    setTableCells(newTableCells);
-  };
-
   return (
     <>
       <Router>
@@ -248,6 +273,26 @@ function Simulator() {
             className="d-flex pb-2 pt-1"
             style={{ width: "100vw", height: "60vh" }}>
             <nav className="sidebar ">
+              <Menu id={"MENU_ID"}>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("UE/EnodeB");
+                  }}>
+                  UE/EnodeB
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("S-GW");
+                  }}>
+                  S-GW
+                </Item>
+                <Item
+                  onClick={() => {
+                    setCurrentObjectType("Test");
+                  }}>
+                  Test
+                </Item>
+              </Menu>
               <ul className="d-flex justify-content-around flex-column h-100">
                 {SidebarData.map((item, index) => (
                   <li
@@ -256,6 +301,9 @@ function Simulator() {
                     onDragStart={(event) => handleDragStart(event, item.title)}>
                     <div
                       className="d-flex align-items-center"
+                      onContextMenu={
+                        item.title === "SUT" ? null : handleContextMenu
+                      }
                       style={{ cursor: "pointer" }}>
                       {item.icon}&nbsp;{item.title}
                     </div>
@@ -275,6 +323,8 @@ function Simulator() {
               setEndY={setEndY}
               y={y}
               clicks={clicks}
+              currentObjectType={currentObjectType}
+              setCurrentObjectType={setCurrentObjectType}
             />
             {/* <div
               style={{
