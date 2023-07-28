@@ -22,6 +22,7 @@ import "react-contexify/ReactContexify.css";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import FolderTree from "react-folder-tree";
 
 let clicks = 0;
 let st = "";
@@ -41,6 +42,8 @@ const SVGContainer = ({
   y,
   currentObjectType,
   setCurrentObjectType,
+  arrowsArray,
+  setArrowsArray,
 }) => {
   const [rectangles, setRectangles] = useState([]);
 
@@ -84,6 +87,20 @@ const SVGContainer = ({
     // });
     setEndX(event.clientX - 185);
     setEndY(y);
+
+    const lastArrow = arrowsArray[arrowsArray.length - 1];
+    console.log("lastArrow:", lastArrow);
+
+    if (event.clientX > s) {
+      lastArrow.endX = event.clientX - 185;
+    } else lastArrow.endX = event.clientX - 165;
+
+    // lastArrow.endX = x
+    // lastArrow.endY = y
+    const tempArray = arrowsArray;
+    tempArray.pop();
+    tempArray.push(lastArrow);
+    setArrowsArray(tempArray);
   };
 
   const handleLineClick = (event, x, name) => {
@@ -94,6 +111,15 @@ const SVGContainer = ({
     // console.log(event.clientY)
     if (clicks % 2 !== 0) {
       // setDragOnGoing(true);
+      let newArr = arrowsArray;
+      newArr.push({
+        startX: x,
+        startY: event.clientY - 69,
+        endX: null,
+        endY: event.clientY - 69,
+        from: st,
+      });
+      setArrowsArray(newArr);
       setStartX(x);
       s = x;
       setStartY(event.clientY - 69);
@@ -111,8 +137,26 @@ const SVGContainer = ({
       // console.log(clicks)
       // setEndX(event.clientX);
       // setEndY(y);
-      dragOnGoing = false;
+      const lastArrow = arrowsArray[arrowsArray.length - 1];
+      console.log("lastArrow:", lastArrow);
 
+      if (event.clientX > s) {
+        lastArrow.endX = event.clientX - 185;
+      } else lastArrow.endX = event.clientX - 175;
+      lastArrow.to = en;
+      // lastArrow.endX = x
+      // lastArrow.endY = y
+      const tempArray = arrowsArray;
+      tempArray.pop();
+      tempArray.push(lastArrow);
+      setArrowsArray(tempArray);
+      dragOnGoing = false;
+      setStartX(null);
+      setEndX(null);
+      setStartY(null);
+      setEndY(null);
+      st = "";
+      en = "";
       return;
     }
   };
@@ -158,36 +202,85 @@ const SVGContainer = ({
             />
           </g>
         ))}
-        <>
-          <line
-            x1={startX}
-            y1={startY}
-            x2={endX}
-            y2={endY}
-            onDoubleClick={(e) => {
-              setShowMessageModal(true);
-            }}
-            style={{ cursor: "pointer" }}
-            stroke="black"
-            strokeWidth="1"></line>
-          {endX && startX && (
-            <polygon
-              // x={endX}
-              // y={endY}
-              points={`${endX},${endY + 5} ${endX},${endY - 5} ${
-                endX >= startX ? endX + 5 : endX - 5
-              },${endY}`}
-              fill="black"
-              stroke="black"
-              strokeWidth="2"
-            />
-          )}
-        </>
+        {/* <><line
+        x1={startX}
+        y1={startY}
+        x2={endX}
+        y2={endY}
+        stroke="black"
+        strokeWidth="1"
+      ></line>
+        <polygon
+          // x={endX}
+          // y={endY}
+          points={`${endX},${endY + 5} ${endX},${endY - 5} ${endX >= startX ? endX + 5 : endX - 5},${endY}`}
+          fill="black"
+          stroke="black"
+          strokeWidth="2"
+        />
+      </> */}
+        {arrowsArray?.map((arrow) => {
+          console.log(arrow);
+          return (
+            <>
+              <line
+                x1={arrow.startX}
+                y1={arrow.startY}
+                x2={arrow.endX}
+                y2={arrow.endY}
+                onDoubleClick={() => {
+                  setShowMessageModal(true);
+                }}
+                style={{ cursor: "pointer" }}
+                stroke="black"
+                strokeWidth="1"></line>
+              <polygon
+                // x={endX}
+                // y={endY}
+                points={`${arrow.endX},${arrow.endY + 5} ${arrow.endX},${
+                  arrow.endY - 5
+                } ${
+                  arrow.endX >= arrow.startX ? arrow.endX + 5 : arrow.endX - 5
+                },${arrow.endY}`}
+                fill="black"
+                stroke="black"
+                strokeWidth="2"
+              />
+            </>
+          );
+        })}
       </svg>
     </div>
   );
 };
+
 function MyVerticallyCenteredModal(props) {
+  const treeState = {
+    name: "CELL_TRAFFIC_TRACE",
+    checked: 0, // half check: some children are checked
+    isOpen: true, // this folder is opened, we can see it's children
+    children: [
+      {
+        name: "Message_Type",
+        checked: 0,
+        isOpen: true,
+        children: [
+          {
+            name: "Procedure Code",
+            checked: 0,
+            isOpen: true,
+            children: [{ name: "HandoverPreparation", checked: 0 }],
+          },
+          { name: "Type of Message", checked: 0 },
+        ],
+      },
+      { name: "MME_UE_SIAP_ID", checked: 0 },
+      { name: "eNB_UE_SIAP_ID", checked: 0 },
+      { name: "EUTRAN_Trace_ID", checked: 0 },
+      { name: "E_UTRAN_CGI", checked: 0 },
+      { name: "Trace_Collection_Entry_IPAddress", checked: 0 },
+    ],
+  };
   return (
     <Modal
       {...props}
@@ -209,8 +302,14 @@ function MyVerticallyCenteredModal(props) {
               width: "50%",
               height: "450px",
               borderRight: "1px solid black",
+              overflowY: "scroll",
+              padding: "10px",
             }}>
-            folder tree
+            <FolderTree
+              data={treeState}
+              showCheckbox={false}
+              initOpenStatus="custom" // default is 'open'
+            />
           </div>
           <div
             style={{
@@ -246,6 +345,7 @@ function MyVerticallyCenteredModal(props) {
 }
 function Simulator() {
   const [arrowLocation, setArrowLocation] = useState(null);
+  const [arrowsArray, setArrowsArray] = useState([]);
 
   // console.log(document.getElementById("main").className);
   document.getElementById("main").classList.remove("auth");
@@ -452,6 +552,8 @@ function Simulator() {
               clicks={clicks}
               currentObjectType={currentObjectType}
               setCurrentObjectType={setCurrentObjectType}
+              arrowsArray={arrowsArray}
+              setArrowsArray={setArrowsArray}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}
