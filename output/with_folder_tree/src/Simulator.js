@@ -44,6 +44,8 @@ const SVGContainer = ({
   setCurrentObjectType,
   arrowsArray,
   setArrowsArray,
+  setStartMessageConnection,
+  startMessageConnection,
 }) => {
   const [rectangles, setRectangles] = useState([]);
 
@@ -104,6 +106,7 @@ const SVGContainer = ({
   };
 
   const handleLineClick = (event, x, name) => {
+    if (!startMessageConnection) return;
     if (st.length === 0) st = name;
     else en = name;
     // console.log((clicks) % 2 === 0)
@@ -157,6 +160,7 @@ const SVGContainer = ({
       setEndY(null);
       st = "";
       en = "";
+      setStartMessageConnection(false);
       return;
     }
   };
@@ -362,6 +366,7 @@ function Simulator() {
   const [endY, setEndY] = useState(null);
   const [currentObjectType, setCurrentObjectType] = useState("");
   const [showMessageModal, setShowMessageModal] = useState(false);
+  const [startMessageConnection, setStartMessageConnection] = useState(false);
 
   let dragOnGoing = false;
   let y = null;
@@ -527,10 +532,23 @@ function Simulator() {
                     onDragStart={(event) => handleDragStart(event, item.title)}>
                     <div
                       className="d-flex align-items-center"
+                      onClick={() => {
+                        if (item.title === "Messages") {
+                          setStartMessageConnection(!startMessageConnection);
+                        }
+                      }}
                       onContextMenu={
                         item.title === "SUT" ? null : handleContextMenu
                       }
-                      style={{ cursor: "pointer" }}>
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor:
+                          startMessageConnection && item.title === "Messages"
+                            ? "rgba(255,0,0,0.4)"
+                            : "#fff",
+                        padding: "5px 0 5px 5px",
+                        borderRadius: "10px",
+                      }}>
                       {item.icon}&nbsp;{item.title}
                     </div>
                   </li>
@@ -554,6 +572,8 @@ function Simulator() {
               setCurrentObjectType={setCurrentObjectType}
               arrowsArray={arrowsArray}
               setArrowsArray={setArrowsArray}
+              setStartMessageConnection={setStartMessageConnection}
+              startMessageConnection={startMessageConnection}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}
