@@ -27,7 +27,7 @@ import "./Navbar.css";
 import MenuItems from "./MenuItems";
 import { menuItemsList } from "./menuItemsList";
 
-const Navbar = () => {
+const Navbar = ({ setRemoveRectangle, removeRectangle }) => {
   async function getProfileNames() {
     fetch("http://localhost:3001/simList")
       .then((response) => {
@@ -108,7 +108,16 @@ const Navbar = () => {
         </div>
         <div className="second">
           <div className="button">
-            <FaCut className="icon" />
+            <FaCut
+              className="icon"
+              style={{
+                color: removeRectangle ? "red" : "black",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setRemoveRectangle(!removeRectangle);
+              }}
+            />
           </div>
         </div>
         <div className="second">

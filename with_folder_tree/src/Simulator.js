@@ -23,6 +23,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import FolderTree from "react-folder-tree";
+import { v4 as uuidv4 } from "uuid";
 
 let clicks = 0;
 let st = "";
@@ -46,6 +47,8 @@ const SVGContainer = ({
   setArrowsArray,
   setStartMessageConnection,
   startMessageConnection,
+  removeRectangle,
+  setRemoveRectangle,
 }) => {
   const [rectangles, setRectangles] = useState([]);
 
@@ -60,7 +63,7 @@ const SVGContainer = ({
 
     setRectangles((prevRectangles) => [
       ...prevRectangles,
-      { name: itemName1 == "SUT" ? "MME" : itemName, x, y },
+      { name: itemName1 == "SUT" ? "MME" : itemName, x, y, id: uuidv4() },
     ]);
     setCurrentObjectType("");
   };
@@ -182,6 +185,21 @@ const SVGContainer = ({
               y={rectangle.y}
               width="100"
               height="30"
+              onClick={() => {
+                if (removeRectangle) {
+                  // handleRectangleRightClick(index);
+                  const tempArray = arrowsArray;
+                  console.log(rectangle.id);
+                  const arr = tempArray.filter(
+                    (arrow) =>
+                      arrow.to !== rectangle.id && arrow.from !== rectangle.id
+                  );
+
+                  setArrowsArray(arr);
+                  handleRectangleRightClick(index);
+                  setRemoveRectangle(false);
+                }
+              }}
               fill={rectangle.name === "MME" ? "#de4e4e" : "#253c9d"}
               onContextMenu={() => handleRectangleRightClick(index)} // Handle right-click on rectangle
             />
@@ -196,7 +214,7 @@ const SVGContainer = ({
               style={{ cursor: "pointer" }}
               strokeWidth={3}
               onClick={(e) =>
-                handleLineClick(e, rectangle.x + 50, rectangle.name)
+                handleLineClick(e, rectangle.x + 50, rectangle.id)
               }
               x1={rectangle.x + 50}
               y1={rectangle.y + 30}
@@ -367,6 +385,7 @@ function Simulator() {
   const [currentObjectType, setCurrentObjectType] = useState("");
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [startMessageConnection, setStartMessageConnection] = useState(false);
+  const [removeRectangle, setRemoveRectangle] = useState(false);
 
   let dragOnGoing = false;
   let y = null;
@@ -435,7 +454,10 @@ function Simulator() {
   return (
     <>
       <Router>
-        <Navbar />
+        <Navbar
+          setRemoveRectangle={setRemoveRectangle}
+          removeRectangle={removeRectangle}
+        />
         {/* <Workspace/> */}
 
         {/* <Sidebar /> */}
@@ -574,6 +596,8 @@ function Simulator() {
               setArrowsArray={setArrowsArray}
               setStartMessageConnection={setStartMessageConnection}
               startMessageConnection={startMessageConnection}
+              setRemoveRectangle={setRemoveRectangle}
+              removeRectangle={removeRectangle}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}
