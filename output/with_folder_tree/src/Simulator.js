@@ -19,7 +19,7 @@ import Home from "./pages/Home";
 import { SidebarData } from "./components/Sidebar/sidebarData";
 import { Menu, Item, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import FolderTree from "react-folder-tree";
@@ -49,10 +49,12 @@ const SVGContainer = ({
   startMessageConnection,
   removeRectangle,
   setRemoveRectangle,
+  positionX,
 }) => {
   const [rectangles, setRectangles] = useState([]);
-
+  const containerRef = useRef(null);
   let dragOnGoing = false;
+
   const handleDrop = (event) => {
     event.preventDefault();
     const itemName1 = event.dataTransfer.getData("text/plain");
@@ -90,15 +92,38 @@ const SVGContainer = ({
     //   }
     //   return event.clientX - 185;
     // });
-    setEndX(event.clientX - 185);
+
+    const cursorX = event.clientX;
+    const cursorY = event.clientY;
+
+    // Get the container's position on the screen
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerX = containerRect.left;
+    const containerY = containerRect.top;
+
+    // Get the container's horizontal scroll offset
+    const scrollOffsetX = containerRef.current.scrollLeft;
+
+    // Calculate the relative coordinates
+    const relativeX = cursorX - containerX + scrollOffsetX;
+    const relativeY = cursorY - containerY;
+
+    // setEndX(relativeX);
+    // console.log(relativeX + " " + (event.clientX - 185));
+    // setEndX(event.clientX - 185);
+    setEndX(relativeX);
+    positionX = relativeX;
+    console.log(positionX);
     setEndY(y);
 
     const lastArrow = arrowsArray[arrowsArray.length - 1];
-    console.log("lastArrow:", lastArrow);
+    // console.log("lastArrow:", lastArrow);
 
     if (event.clientX > s) {
-      lastArrow.endX = event.clientX - 185;
-    } else lastArrow.endX = event.clientX - 165;
+      lastArrow.endX = relativeX - 5;
+      // lastArrow.endX = event.clientX - 185;
+    } else lastArrow.endX = relativeX + 10;
+    // } else lastArrow.endX = event.clientX - 165;
 
     // lastArrow.endX = x
     // lastArrow.endY = y
@@ -138,20 +163,26 @@ const SVGContainer = ({
       document.removeEventListener("mousemove", (e) =>
         handleMouseMove(e, clicks)
       );
-      setEndX(event.clientX - 185 < startX ? x + 5 : x - 5);
-      console.log(st + " is now connected to " + en);
-      // console.log(clicks)
-      // setEndX(event.clientX);
-      // setEndY(y);
+      // setEndX(positionX < startX ? positionX + 5 : positionX - 5);
+      // // setEndX(event.clientX - 185 < startX ? x + 5 : x - 5);
+      // console.log(st + " is now connected to " + en);
+      // // console.log(clicks)
+      // // setEndX(event.clientX);
+      // // setEndY(y);
       const lastArrow = arrowsArray[arrowsArray.length - 1];
-      console.log("lastArrow:", lastArrow);
+      // // console.log("lastArrow:", lastArrow);
 
-      if (event.clientX > s) {
-        lastArrow.endX = event.clientX - 185;
-      } else lastArrow.endX = event.clientX - 175;
+      // if (positionX > s) {
+      //   lastArrow.endX = positionX;
+      //   // lastArrow.endX = event.clientX - 185;
+      // } else {
+      //   lastArrow.endX = positionX;
+      //   console.log(positionX);
+      // }
+      // // } else lastArrow.endX = event.clientX - 175;
       lastArrow.to = en;
-      // lastArrow.endX = x
-      // lastArrow.endY = y
+      // // lastArrow.endX = x
+      // // lastArrow.endY = y
       const tempArray = arrowsArray;
       tempArray.pop();
       tempArray.push(lastArrow);
@@ -169,7 +200,7 @@ const SVGContainer = ({
   };
 
   return (
-    <div style={{ overflowX: "scroll" }}>
+    <div style={{ overflowX: "scroll" }} ref={containerRef}>
       <svg
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -242,7 +273,7 @@ const SVGContainer = ({
         />
       </> */}
         {arrowsArray?.map((arrow) => {
-          console.log(arrow);
+          // console.log(arrow);
           return (
             <>
               <line
@@ -386,6 +417,7 @@ function Simulator() {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [startMessageConnection, setStartMessageConnection] = useState(false);
   const [removeRectangle, setRemoveRectangle] = useState(false);
+  let positionX = 0;
 
   let dragOnGoing = false;
   let y = null;
@@ -598,6 +630,7 @@ function Simulator() {
               startMessageConnection={startMessageConnection}
               setRemoveRectangle={setRemoveRectangle}
               removeRectangle={removeRectangle}
+              positionX={positionX}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}
