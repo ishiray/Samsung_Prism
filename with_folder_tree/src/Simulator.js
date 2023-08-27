@@ -403,7 +403,7 @@ function MyVerticallyCenteredModal(props) {
   }, []);
   useEffect(() => {
     getTreeValues();
-  }, [Tree]);
+  }, [selectedMessageID]);
 
 
 
@@ -432,6 +432,7 @@ function MyVerticallyCenteredModal(props) {
       const treeXML = treeData[0].msg_xsd;
       const treeJSON = xmljs.xml2js(treeXML);
       const simplifiedJSON=returnSimplifiedJson(treeJSON);
+      console.log("The simplified json tree is ", simplifiedJSON)
       setTree(simplifiedJSON);
     } catch (error) {
       console.error("An error occurred while fetching getTreeValues:", error);
