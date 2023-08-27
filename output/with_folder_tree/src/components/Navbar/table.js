@@ -11,9 +11,9 @@ const Table = ({ data }) => {
       </thead>
       <tbody>
         {data.map((item, index) => (
-          <tr key={index}>
-            <td>{item.column1}</td>
-            <td>{item.column2}</td>
+          <tr key={index}>            
+          <td>{item.config_param_name}</td>
+          <td>{item.default_value}</td>
           </tr>
         ))}
       </tbody>
