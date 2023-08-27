@@ -50,6 +50,12 @@ const SVGContainer = ({
   removeRectangle,
   setRemoveRectangle,
   positionX,
+  addTimer,
+  timerArray,
+  setTimerArray,
+  setAddTimer,
+  setShowTimerModal,
+  setCurrentTimerBeingEdited,
 }) => {
   const [rectangles, setRectangles] = useState([]);
   const containerRef = useRef(null);
@@ -134,7 +140,19 @@ const SVGContainer = ({
   };
 
   const handleLineClick = (event, x, name) => {
-    if (!startMessageConnection) return;
+    if (!startMessageConnection && !addTimer) return;
+    if (addTimer && !startMessageConnection) {
+      let temp = timerArray;
+      temp.push({
+        rectangle: name,
+        x,
+        y: event.clientY - 69,
+        value: 0,
+      });
+      setTimerArray(temp);
+      setAddTimer(false);
+      return;
+    }
     if (st.length === 0) st = name;
     else en = name;
     // console.log((clicks) % 2 === 0)
@@ -255,6 +273,34 @@ const SVGContainer = ({
             />
           </g>
         ))}
+        {timerArray.map((timer, index) => {
+          return (
+            <g key={index}>
+              <polygon
+                points={`${timer.x - 7},${timer.y - 7} ${timer.x + 7},${
+                  timer.y - 7
+                } ${timer.x - 7},${timer.y + 7} ${timer.x + 7},${timer.y + 7} ${
+                  timer.x - 7
+                },${timer.y - 7}`}
+                fill="black"
+                stroke="black"
+                onClick={() => {
+                  setCurrentTimerBeingEdited(timer.rectangle);
+                  setShowTimerModal(true);
+                }}
+                style={{ cursor: "pointer" }}
+                strokeWidth="2"
+              />
+              <text
+                x={timer.x + 12}
+                y={timer.y}
+                fill="black"
+                style={{ fontSize: "0.5rem", fontWeight: "bold" }}>
+                {timer.value}
+              </text>
+            </g>
+          );
+        })}
         {/* <><line
         x1={startX}
         y1={startY}
@@ -263,14 +309,7 @@ const SVGContainer = ({
         stroke="black"
         strokeWidth="1"
       ></line>
-        <polygon
-          // x={endX}
-          // y={endY}
-          points={`${endX},${endY + 5} ${endX},${endY - 5} ${endX >= startX ? endX + 5 : endX - 5},${endY}`}
-          fill="black"
-          stroke="black"
-          strokeWidth="2"
-        />
+        
       </> */}
         {arrowsArray?.map((arrow) => {
           // console.log(arrow);
@@ -397,17 +436,12 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 function Simulator() {
-  const [arrowLocation, setArrowLocation] = useState(null);
   const [arrowsArray, setArrowsArray] = useState([]);
 
   // console.log(document.getElementById("main").className);
   document.getElementById("main").classList.remove("auth");
   document.getElementById("main").classList.add("simulator");
   // console.log(document.getElementById("main").className);
-
-  const [tableCells, setTableCells] = useState(
-    Array.from({ length: 30 }, () => Array.from({ length: 30 }, () => ""))
-  );
 
   const [startX, setStartX] = useState(null);
   const [startY, setStartY] = useState(null);
@@ -417,19 +451,76 @@ function Simulator() {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [startMessageConnection, setStartMessageConnection] = useState(false);
   const [removeRectangle, setRemoveRectangle] = useState(false);
+  const [addTimer, setAddTimer] = useState(false);
+  const [timerArray, setTimerArray] = useState([]);
+  const [currentTimerBeingEdited, setCurrentTimerBeingEdited] = useState();
   let positionX = 0;
 
   let dragOnGoing = false;
   let y = null;
 
   const handleDragStart = (event, item) => {
+    if (item === "Timer") {
+      event.dataTransfer.setData("text/plain", item);
+    }
     if (item !== "SUT" && currentObjectType.length === 0) {
       console.log("first");
-      return null;
+      return;
     }
+
     event.dataTransfer.setData("text/plain", item);
   };
-
+  const [showTimerModal, setShowTimerModal] = useState(false);
+  const [newTimerValue, setNewTimerValue] = useState("");
+  const timerModal = (
+    <>
+      <div
+        style={{
+          backgroundColor: "white",
+          position: "absolute",
+          border: "1px solid black",
+          top: "50%",
+          left: "50%",
+          flexDirection: "column",
+          display: "flex",
+          padding: "10px",
+          alignItems: "center",
+          justifyContent: "between",
+        }}>
+        <p className="header">Edit Value of: {currentTimerBeingEdited}</p>
+        <input
+          type="text"
+          value={newTimerValue}
+          onChange={(e) => setNewTimerValue(e.target.value)}
+        />
+        <div>
+          <button
+            className="btn btn-primary m-2"
+            onClick={() => {
+              setNewTimerValue("");
+              setShowTimerModal(false);
+            }}>
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary m-2"
+            onClick={() => {
+              let temp = timerArray;
+              temp.forEach((timer) => {
+                if (timer.rectangle === currentTimerBeingEdited) {
+                  timer.value = newTimerValue;
+                }
+              });
+              setTimerArray(temp);
+              setNewTimerValue("");
+              setShowTimerModal(false);
+            }}>
+            Save
+          </button>
+        </div>
+      </div>
+    </>
+  );
   // const handleDragOver = (event) => {
   //   event.preventDefault();
   // };
@@ -590,6 +681,9 @@ function Simulator() {
                         if (item.title === "Messages") {
                           setStartMessageConnection(!startMessageConnection);
                         }
+                        if (item.title === "Timer") {
+                          setAddTimer(!addTimer);
+                        }
                       }}
                       onContextMenu={
                         item.title === "SUT" ? null : handleContextMenu
@@ -597,7 +691,9 @@ function Simulator() {
                       style={{
                         cursor: "pointer",
                         backgroundColor:
-                          startMessageConnection && item.title === "Messages"
+                          (startMessageConnection &&
+                            item.title === "Messages") ||
+                          (addTimer && item.title === "Timer")
                             ? "rgba(255,0,0,0.4)"
                             : "#fff",
                         padding: "5px 0 5px 5px",
@@ -631,11 +727,18 @@ function Simulator() {
               setRemoveRectangle={setRemoveRectangle}
               removeRectangle={removeRectangle}
               positionX={positionX}
+              addTimer={addTimer}
+              setTimerArray={setTimerArray}
+              setAddTimer={setAddTimer}
+              timerArray={timerArray}
+              setShowTimerModal={setShowTimerModal}
+              setCurrentTimerBeingEdited={setCurrentTimerBeingEdited}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}
               onHide={() => setShowMessageModal(false)}
             />
+            {showTimerModal && timerModal}
             {/* <div
               style={{
                 flex: 1,

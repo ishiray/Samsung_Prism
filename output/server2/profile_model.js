@@ -87,18 +87,27 @@ const getMsgXsd = (body) => {
 
 const getProfileInputs = (body) => {
   return new Promise(function(resolve, reject) {
-    const intfID=body.intf_id
-    const ptclID=body.ptcl_id
-    const controlLabel=body.control_label
-    pool.query('SELECT config_param_name,default_value FROM profile_config_param_master WHERE (intf_id,ptcl_id,control_label) = ($1,$2,$3)', [intfID,ptclID,controlLabel], (error, results) => {
-      if (error) {
-        reject(error)
-      }
-      console.log('the output is going to be ',results.rows)
-      resolve(results.rows);
-    })
-  }) 
-}
+    const intfID = body.intf_id;
+    const ptclID = body.ptcl_id;
+    const configParamType = body.config_param_type;
+
+    console.log('the input is ', intfID, ptclID, configParamType);
+
+    pool.query(
+      'SELECT config_param_name, default_value FROM profile_config_param_master WHERE (config_param_type, intf_id, ptcl_id) = ($1, $2, $3)',
+      [configParamType, intfID, ptclID],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        
+        console.log('the output is going to be ', results.rows);
+
+
+        resolve(results.rows);
+    });
+  });
+};
 
 module.exports = {
     getSims,

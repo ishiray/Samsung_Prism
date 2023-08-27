@@ -70,7 +70,7 @@ const Navbar = ({ setRemoveRectangle, removeRectangle }) => {
       });
   }
 
-  // getProfileNames();
+  getProfileNames();
 
   return (
     <nav>
