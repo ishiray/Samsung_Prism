@@ -575,7 +575,7 @@ function Simulator() {
   const [endX, setEndX] = useState(null);
   const [endY, setEndY] = useState(null);
   const [currentObjectType, setCurrentObjectType] = useState("");
-  const [showMessageModal, setShowMessageModal] = useState(true);
+  const [showMessageModal, setShowMessageModal] = useState(false);
   const [startMessageConnection, setStartMessageConnection] = useState(false);
   const [removeRectangle, setRemoveRectangle] = useState(false);
   const [addTimer, setAddTimer] = useState(false);
