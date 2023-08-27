@@ -66,7 +66,7 @@ const getMsgNameList = (body) => {
       if (error) {
         reject(error)
       }
-      console.log('the output is going to be ',results.rows)
+      //console.log('the output is going to be ',results.rows)
       resolve(results.rows);
     })
   }) 
@@ -79,7 +79,7 @@ const getMsgXsd = (body) => {
       if (error) {
         reject(error)
       }
-      console.log('the output is going to be ',results.rows)
+      //console.log('the output is going to be ',results.rows)
       resolve(results.rows);
     })
   }) 

@@ -54,7 +54,7 @@ your outputs will look like
 
 ** /getMsgXsd
 use this to get the message xsd file. it needs msg_xsd_id.
-msgxsdid='1073'
+msgxsdid='1068'
 http://localhost:3001/getMsgXsd?msg_xsd_id=${msgxsdid}
 output:
 {

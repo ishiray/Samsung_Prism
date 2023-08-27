@@ -19,11 +19,13 @@ import Home from "./pages/Home";
 import { SidebarData } from "./components/Sidebar/sidebarData";
 import { Menu, Item, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import FolderTree from "react-folder-tree";
 import { v4 as uuidv4 } from "uuid";
+import xmljs from "xml-js";
+import { Treebeard } from "react-treebeard";
 
 let clicks = 0;
 let st = "";
@@ -56,6 +58,11 @@ const SVGContainer = ({
   setAddTimer,
   setShowTimerModal,
   setCurrentTimerBeingEdited,
+  setShowCommentModal,
+  addComment,
+  setCurrentCommentBeingEdit,
+  commentArray,
+  setNewComment,
 }) => {
   const [rectangles, setRectangles] = useState([]);
   const containerRef = useRef(null);
@@ -162,6 +169,7 @@ const SVGContainer = ({
       // setDragOnGoing(true);
       let newArr = arrowsArray;
       newArr.push({
+        id: uuidv4(),
         startX: x,
         startY: event.clientY - 69,
         endX: null,
@@ -301,6 +309,19 @@ const SVGContainer = ({
             </g>
           );
         })}
+        {commentArray.map((comment, index) => {
+          return (
+            <g key={index}>
+              <text
+                x={comment.x}
+                y={comment.y}
+                fill="black"
+                style={{ fontSize: "0.5rem" }}>
+                {comment.value}
+              </text>
+            </g>
+          );
+        })}
         {/* <><line
         x1={startX}
         y1={startY}
@@ -322,6 +343,22 @@ const SVGContainer = ({
                 y2={arrow.endY}
                 onDoubleClick={() => {
                   setShowMessageModal(true);
+                }}
+                onClick={() => {
+                  if (addComment) {
+                    setCurrentCommentBeingEdit({
+                      id: arrow.id,
+                      y: arrow.endY - 7,
+                      x: (arrow.startX + arrow.endX) / 2,
+                    });
+                    commentArray.forEach((comment) => {
+                      console.log(comment);
+                      if (comment.id === arrow.id) {
+                        setNewComment(comment.value);
+                      }
+                    });
+                    setShowCommentModal(true);
+                  }
                 }}
                 style={{ cursor: "pointer" }}
                 stroke="black"
@@ -345,9 +382,20 @@ const SVGContainer = ({
     </div>
   );
 };
-
 function MyVerticallyCenteredModal(props) {
-  const treeState = {
+  const [messageNames, setMessageNames] = useState([
+    {
+      msg_xsd_id: 1073,
+      msg_name: "KILL_REQUEST                            ",
+    },
+    {
+      msg_xsd_id: 1008,
+      msg_name: "UE_CONTEXT_RELEASE_REQUEST              ",
+    },
+  ]);
+
+  const [selectedMessageID, setSelectedMessageID] = useState(1068);
+  const [Tree, setTree] = useState({
     name: "CELL_TRAFFIC_TRACE",
     checked: 0, // half check: some children are checked
     isOpen: true, // this folder is opened, we can see it's children
@@ -372,7 +420,118 @@ function MyVerticallyCenteredModal(props) {
       { name: "E_UTRAN_CGI", checked: 0 },
       { name: "Trace_Collection_Entry_IPAddress", checked: 0 },
     ],
+  });
+
+  function returnSimplifiedJson(rawJson) {
+    function addNode(node_data, parent) {
+      if (parent["children"]) {
+        parent["children"].push({
+          name: node_data,
+          toggled: true,
+          checked: 0,
+          isOpen: true,
+        });
+      } else {
+        parent["children"] = [
+          {
+            name: node_data,
+            toggled: true,
+            checked: 0,
+            isOpen: true,
+          },
+        ];
+      }
+      return parent;
+    }
+
+    let simplifiedJSON = {};
+    simplifiedJSON = addNode(
+      rawJson["elements"][0]["elements"][0]["attributes"]["name"],
+      simplifiedJSON
+    )["children"][0];
+    simplifiedJSON["children"] = [];
+    if (
+      rawJson["elements"][0]["elements"][0]["elements"][0]["elements"][0][
+        "elements"
+      ]
+    ) {
+      let parent = {};
+      rawJson["elements"][0]["elements"][0]["elements"][0]["elements"][0][
+        "elements"
+      ].map((element) => {
+        if (element["attributes"]["ref"]) {
+          if (Object.keys(parent).length !== 0) {
+            simplifiedJSON["children"].push(parent);
+          }
+          parent = {
+            name: element["attributes"]["ref"],
+            toggled: true,
+            checked: 0,
+            isOpen: true,
+          };
+        } else if (element["attributes"]["name"]) {
+          parent = addNode(element["attributes"]["name"], parent);
+        }
+      });
+      simplifiedJSON["children"].push(parent);
+    }
+    return simplifiedJSON;
+  }
+
+  useEffect(() => {
+    getMessageNames(props.ptcl_id);
+  }, []);
+  useEffect(() => {
+    getTreeValues();
+  }, [selectedMessageID]);
+
+  const handleSelectChange = (event) => {
+    setSelectedMessageID(event.target.value);
   };
+
+  async function getMessageNames(ptcl_id) {
+    try {
+      const namesResponse = await fetch(
+        `http://localhost:3001/getMsgNameList?ptcl_id=${ptcl_id}`
+      );
+      const names = await namesResponse.json();
+      //console.log("The raw names are ", names);
+      setMessageNames(names);
+    } catch (error) {
+      console.error("An error occurred while fetching namesResponse:", error);
+    }
+  }
+
+  async function getTreeValues() {
+    try {
+      const treeResponse = await fetch(
+        `http://localhost:3001/getMsgXsd?msg_xsd_id=${selectedMessageID}`
+      );
+      const treeData = await treeResponse.json();
+      const treeXML = treeData[0].msg_xsd;
+      const treeJSON = xmljs.xml2js(treeXML);
+      const simplifiedJSON = returnSimplifiedJson(treeJSON);
+      console.log("The simplified json tree is ", simplifiedJSON);
+      setTree(simplifiedJSON);
+    } catch (error) {
+      console.error("An error occurred while fetching getTreeValues:", error);
+    }
+  }
+
+  const [data, setData] = useState(Tree);
+  const [cursor, setCursor] = useState(false);
+  const onToggle = (node, toggled) => {
+    if (cursor) {
+      cursor.active = false;
+    }
+    node.active = true;
+    if (node.children) {
+      node.toggled = toggled;
+    }
+    setCursor(node);
+    setData(Object.assign({}, data));
+  };
+
   return (
     <Modal
       {...props}
@@ -382,8 +541,15 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header centered closeButton>
         <div style={{ margin: "auto", fontSize: "0.7rem" }}>
           Message Name:
-          <select style={{ margin: "5px" }}>
-            <option value="1">CELL_TRAFFIC_TRACE</option>
+          <select
+            style={{ margin: "5px" }}
+            value={selectedMessageID}
+            onChange={handleSelectChange}>
+            {messageNames.map((message) => {
+              return (
+                <option value={message.msg_xsd_id}>{message.msg_name}</option>
+              );
+            })}
           </select>
         </div>
       </Modal.Header>
@@ -397,11 +563,7 @@ function MyVerticallyCenteredModal(props) {
               overflowY: "scroll",
               padding: "10px",
             }}>
-            <FolderTree
-              data={treeState}
-              showCheckbox={false}
-              initOpenStatus="custom" // default is 'open'
-            />
+            <Treebeard data={Tree} onToggle={onToggle} />
           </div>
           <div
             style={{
@@ -436,6 +598,10 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 function Simulator() {
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [ptclID, setptclID] = useState(1);
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [arrowLocation, setArrowLocation] = useState(null);
   const [arrowsArray, setArrowsArray] = useState([]);
 
   // console.log(document.getElementById("main").className);
@@ -454,6 +620,10 @@ function Simulator() {
   const [addTimer, setAddTimer] = useState(false);
   const [timerArray, setTimerArray] = useState([]);
   const [currentTimerBeingEdited, setCurrentTimerBeingEdited] = useState();
+  const [addComment, setAddComment] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [commentArray, setCommentArray] = useState([]);
+  const [currentCommentBeingEdit, setCurrentCommentBeingEdit] = useState("");
   let positionX = 0;
 
   let dragOnGoing = false;
@@ -472,6 +642,7 @@ function Simulator() {
   };
   const [showTimerModal, setShowTimerModal] = useState(false);
   const [newTimerValue, setNewTimerValue] = useState("");
+
   const timerModal = (
     <>
       <div
@@ -514,6 +685,69 @@ function Simulator() {
               setTimerArray(temp);
               setNewTimerValue("");
               setShowTimerModal(false);
+            }}>
+            Save
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
+  const commentModal = (
+    <>
+      <div
+        style={{
+          backgroundColor: "white",
+          position: "absolute",
+          border: "1px solid black",
+          top: "50%",
+          left: "50%",
+          flexDirection: "column",
+          display: "flex",
+          padding: "10px",
+          alignItems: "center",
+          justifyContent: "between",
+        }}>
+        <p className="header">Add new Comment</p>
+        <input
+          type="text"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+        />
+        <div>
+          <button
+            className="btn btn-primary m-2"
+            onClick={() => {
+              setNewComment("");
+              setAddComment(false);
+              setShowCommentModal(false);
+            }}>
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary m-2"
+            onClick={() => {
+              let temp = commentArray;
+              let flag = false;
+
+              temp.forEach((comment) => {
+                if (comment.id === currentCommentBeingEdit.id) {
+                  comment.value = newComment;
+                  setCommentArray(temp);
+                  flag = true;
+                }
+              });
+              if (!flag) {
+                temp.push({
+                  ...currentCommentBeingEdit,
+                  value: newComment,
+                });
+                setCommentArray(temp);
+              }
+              setCurrentCommentBeingEdit("");
+              setNewComment("");
+              setAddComment(false);
+              setShowCommentModal(false);
             }}>
             Save
           </button>
@@ -574,6 +808,7 @@ function Simulator() {
       },
     });
   };
+  const [showCommentModal, setShowCommentModal] = useState(false);
   return (
     <>
       <Router>
@@ -684,6 +919,9 @@ function Simulator() {
                         if (item.title === "Timer") {
                           setAddTimer(!addTimer);
                         }
+                        if (item.title === "Comment") {
+                          setAddComment(!addComment);
+                        }
                       }}
                       onContextMenu={
                         item.title === "SUT" ? null : handleContextMenu
@@ -693,7 +931,8 @@ function Simulator() {
                         backgroundColor:
                           (startMessageConnection &&
                             item.title === "Messages") ||
-                          (addTimer && item.title === "Timer")
+                          (addTimer && item.title === "Timer") ||
+                          (addComment && item.title === "Comment")
                             ? "rgba(255,0,0,0.4)"
                             : "#fff",
                         padding: "5px 0 5px 5px",
@@ -732,13 +971,20 @@ function Simulator() {
               setAddTimer={setAddTimer}
               timerArray={timerArray}
               setShowTimerModal={setShowTimerModal}
+              setShowCommentModal={setShowCommentModal}
               setCurrentTimerBeingEdited={setCurrentTimerBeingEdited}
+              addComment={addComment}
+              setCurrentCommentBeingEdit={setCurrentCommentBeingEdit}
+              commentArray={commentArray}
+              setNewComment={setNewComment}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}
               onHide={() => setShowMessageModal(false)}
+              ptcl_id={ptclID}
             />
             {showTimerModal && timerModal}
+            {showCommentModal && commentModal}
             {/* <div
               style={{
                 flex: 1,
