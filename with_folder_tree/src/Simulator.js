@@ -19,15 +19,18 @@ import Home from "./pages/Home";
 import { SidebarData } from "./components/Sidebar/sidebarData";
 import { Menu, Item, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import FolderTree from "react-folder-tree";
 import { v4 as uuidv4 } from "uuid";
+import xmljs from 'xml-js';
+import {Treebeard} from 'react-treebeard';
 
 let clicks = 0;
 let st = "";
 let en = "";
+
 
 let s = null;
 const SVGContainer = ({
@@ -306,9 +309,22 @@ const SVGContainer = ({
     </div>
   );
 };
-
 function MyVerticallyCenteredModal(props) {
-  const treeState = {
+
+  
+  const [messageNames, setMessageNames]=useState([
+    {
+      msg_xsd_id: 1073,
+      msg_name: 'KILL_REQUEST                            '
+    },
+    {
+      msg_xsd_id: 1008,
+      msg_name: 'UE_CONTEXT_RELEASE_REQUEST              '
+    },
+  ])
+
+  const [selectedMessageID, setSelectedMessageID] = useState(1068);
+  const [Tree, setTree] = useState({
     name: "CELL_TRAFFIC_TRACE",
     checked: 0, // half check: some children are checked
     isOpen: true, // this folder is opened, we can see it's children
@@ -333,7 +349,110 @@ function MyVerticallyCenteredModal(props) {
       { name: "E_UTRAN_CGI", checked: 0 },
       { name: "Trace_Collection_Entry_IPAddress", checked: 0 },
     ],
+  });
+
+  function returnSimplifiedJson(rawJson){
+    function addNode(node_data, parent){
+      if (parent["children"]) {
+        parent["children"].push({
+          name:node_data,
+          toggled:true,
+          checked:0,
+          isOpen:true,
+        })}
+      else{
+        parent["children"]=[{
+          name:node_data,
+          toggled:true,
+          checked:0,
+          isOpen:true,
+        }]
+      }
+      return parent;
+    }
+    
+    let simplifiedJSON={}; 
+    simplifiedJSON=addNode(rawJson["elements"][0]["elements"][0]["attributes"]["name"], simplifiedJSON)["children"][0]; 
+    simplifiedJSON["children"]=[];
+    if (rawJson["elements"][0]["elements"][0]["elements"][0]["elements"][0]["elements"]){
+      let parent={};
+      rawJson["elements"][0]["elements"][0]["elements"][0]["elements"][0]["elements"].map((element)=>{
+        if (element["attributes"]["ref"]){
+          if (Object.keys(parent).length !== 0){
+            simplifiedJSON["children"].push(parent);
+          }
+          parent={
+            name:element["attributes"]["ref"],
+            toggled:true,
+            checked:0,
+            isOpen:true,
+          }
+        }
+        else if(element["attributes"]["name"]){
+          parent=addNode(element["attributes"]["name"], parent)
+        }
+      })
+      simplifiedJSON["children"].push(parent);
+    }
+    return simplifiedJSON;
+  }
+
+
+  useEffect(() => {
+    getMessageNames(props.ptcl_id);
+  }, []);
+  useEffect(() => {
+    getTreeValues();
+  }, [Tree]);
+
+
+
+
+  const handleSelectChange = (event) => {
+    setSelectedMessageID(event.target.value);
   };
+
+
+
+  async function getMessageNames(ptcl_id) {
+    try {
+      const namesResponse = await fetch(`http://localhost:3001/getMsgNameList?ptcl_id=${ptcl_id}`);
+      const names = await namesResponse.json();
+      //console.log("The raw names are ", names);
+      setMessageNames(names);
+    } catch (error) {
+      console.error("An error occurred while fetching namesResponse:", error);
+    }
+  }
+
+  async function getTreeValues() {
+    try {
+      const treeResponse = await fetch(`http://localhost:3001/getMsgXsd?msg_xsd_id=${selectedMessageID}`);
+      const treeData = await treeResponse.json(); 
+      const treeXML = treeData[0].msg_xsd;
+      const treeJSON = xmljs.xml2js(treeXML);
+      const simplifiedJSON=returnSimplifiedJson(treeJSON);
+      setTree(simplifiedJSON);
+    } catch (error) {
+      console.error("An error occurred while fetching getTreeValues:", error);
+    }
+  }
+
+  const [data, setData] = useState(Tree);
+  const [cursor, setCursor] = useState(false);
+  const onToggle = (node, toggled) => {
+    if (cursor) {
+        cursor.active = false;
+    }
+    node.active = true;
+    if (node.children) {
+        node.toggled = toggled;
+    }
+    setCursor(node);
+    setData(Object.assign({}, data))
+}
+  
+
   return (
     <Modal
       {...props}
@@ -343,8 +462,12 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header centered closeButton>
         <div style={{ margin: "auto", fontSize: "0.7rem" }}>
           Message Name:
-          <select style={{ margin: "5px" }}>
-            <option value="1">CELL_TRAFFIC_TRACE</option>
+          <select style={{ margin: "5px" }} value={selectedMessageID} onChange={handleSelectChange}>
+            {messageNames.map((message)=>{
+              return(
+                <option value={message.msg_xsd_id}>{message.msg_name}</option>
+              )
+            })}
           </select>
         </div>
       </Modal.Header>
@@ -358,10 +481,9 @@ function MyVerticallyCenteredModal(props) {
               overflowY: "scroll",
               padding: "10px",
             }}>
-            <FolderTree
-              data={treeState}
-              showCheckbox={false}
-              initOpenStatus="custom" // default is 'open'
+            <Treebeard
+                data={Tree}
+                onToggle={onToggle}
             />
           </div>
           <div
@@ -397,6 +519,9 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 function Simulator() {
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [ptclID, setptclID]=useState(1)
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [arrowLocation, setArrowLocation] = useState(null);
   const [arrowsArray, setArrowsArray] = useState([]);
 
@@ -414,7 +539,7 @@ function Simulator() {
   const [endX, setEndX] = useState(null);
   const [endY, setEndY] = useState(null);
   const [currentObjectType, setCurrentObjectType] = useState("");
-  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [showMessageModal, setShowMessageModal] = useState(true);
   const [startMessageConnection, setStartMessageConnection] = useState(false);
   const [removeRectangle, setRemoveRectangle] = useState(false);
   let positionX = 0;
@@ -635,6 +760,7 @@ function Simulator() {
             <MyVerticallyCenteredModal
               show={showMessageModal}
               onHide={() => setShowMessageModal(false)}
+              ptcl_id={ptclID}
             />
             {/* <div
               style={{
