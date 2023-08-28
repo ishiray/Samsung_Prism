@@ -660,7 +660,7 @@ function Simulator() {
           alignItems: "center",
           justifyContent: "between",
         }}>
-        <p className="header">Edit Value of: {currentTimerBeingEdited}</p>
+        <p className="header">Edit Value of Timer</p>
         <input
           type="text"
           value={newTimerValue}
@@ -914,18 +914,35 @@ function Simulator() {
                 {SidebarData.map((item, index) => (
                   <li
                     key={index}
-                    draggable={true}
+                    draggable={
+                      item.title === "SUT" ||
+                      (item.title === "SIM" && currentObjectType)
+                        ? true
+                        : false
+                    }
                     onDragStart={(event) => handleDragStart(event, item.title)}>
                     <div
                       className="d-flex align-items-center"
                       onClick={() => {
-                        if (item.title === "Messages") {
+                        if (
+                          item.title === "Messages" &&
+                          !addComment &&
+                          !addTimer
+                        ) {
                           setStartMessageConnection(!startMessageConnection);
                         }
-                        if (item.title === "Timer") {
+                        if (
+                          item.title === "Timer" &&
+                          !addComment &&
+                          !startMessageConnection
+                        ) {
                           setAddTimer(!addTimer);
                         }
-                        if (item.title === "Comment") {
+                        if (
+                          item.title === "Comment" &&
+                          !addTimer &&
+                          !startMessageConnection
+                        ) {
                           setAddComment(!addComment);
                         }
                       }}
