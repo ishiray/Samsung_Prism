@@ -63,8 +63,9 @@ const SVGContainer = ({
   setCurrentCommentBeingEdit,
   commentArray,
   setNewComment,
+  rectangles,
+  setRectangles,
 }) => {
-  const [rectangles, setRectangles] = useState([]);
   const containerRef = useRef(null);
   let dragOnGoing = false;
 
@@ -624,6 +625,7 @@ function Simulator() {
   const [newComment, setNewComment] = useState("");
   const [commentArray, setCommentArray] = useState([]);
   const [currentCommentBeingEdit, setCurrentCommentBeingEdit] = useState("");
+  const [rectangles, setRectangles] = useState([]);
   let positionX = 0;
 
   let dragOnGoing = false;
@@ -815,6 +817,10 @@ function Simulator() {
         <Navbar
           setRemoveRectangle={setRemoveRectangle}
           removeRectangle={removeRectangle}
+          rectangles={rectangles}
+          arrowsArray={arrowsArray}
+          commentArray={commentArray}
+          timerArray={timerArray}
         />
         {/* <Workspace/> */}
 
@@ -977,6 +983,8 @@ function Simulator() {
               setCurrentCommentBeingEdit={setCurrentCommentBeingEdit}
               commentArray={commentArray}
               setNewComment={setNewComment}
+              rectangles={rectangles}
+              setRectangles={setRectangles}
             />
             <MyVerticallyCenteredModal
               show={showMessageModal}

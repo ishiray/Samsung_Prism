@@ -27,7 +27,14 @@ import "./Navbar.css";
 import MenuItems from "./MenuItems";
 import { menuItemsList } from "./menuItemsList";
 
-const Navbar = ({ setRemoveRectangle, removeRectangle }) => {
+const Navbar = ({
+  setRemoveRectangle,
+  removeRectangle,
+  commentArray,
+  arrowsArray,
+  rectangles,
+  timerArray,
+}) => {
   async function getProfileNames() {
     fetch("http://localhost:3001/simList")
       .then((response) => {
@@ -93,7 +100,31 @@ const Navbar = ({ setRemoveRectangle, removeRectangle }) => {
         </div>
         <div className="second">
           <div className="button">
-            <FaSave className="icon" />
+            <FaSave
+              className="icon"
+              onClick={async () => {
+                const JSONData = {
+                  rectangles,
+                  arrowsArray,
+                  timerArray,
+                  commentArray,
+                };
+                console.log("JSONData:", JSONData);
+
+                const rawResponse = await fetch(
+                  "https://localhost:3001/save-file",
+                  {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(JSONData),
+                  }
+                );
+                const content = await rawResponse.json();
+              }}
+            />
           </div>
         </div>
         <div className="second">
