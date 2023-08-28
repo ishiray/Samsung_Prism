@@ -1,28 +1,14 @@
 import "./styles.css";
 import * as React from "react";
 import BottomBar from "./components/Bottombar/Bottom_bar";
-import Workspace from "./components/Workspace/workspace";
-// import { NavLink } from "react-router-dom";
-// import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
-import Sidebar from "./components/Sidebar/Sidebar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SUT from "./pages/SUT";
-import SIM from "./pages/SIM";
-import Analyzer from "./pages/Analyzer";
-import Messages from "./pages/Messages";
-import Comment from "./pages/Comment";
-import Timer from "./pages/Timer";
-import DataTransfer from "./pages/DataTransfer";
 import FileTree from "./components/FileTree/filetree";
-import Home from "./pages/Home";
 import { SidebarData } from "./components/Sidebar/sidebarData";
 import { Menu, Item, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import { useState, useRef, useEffect } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import FolderTree from "react-folder-tree";
 import { v4 as uuidv4 } from "uuid";
 import xmljs from "xml-js";
 import { Treebeard } from "react-treebeard";
@@ -33,8 +19,6 @@ let en = "";
 
 let s = null;
 const SVGContainer = ({
-  startX,
-  startY,
   endX,
   endY,
   setEndX,
@@ -98,17 +82,8 @@ const SVGContainer = ({
 
   const handleMouseMove = (event, clicks) => {
     if (clicks % 2 === 0) return;
-    // setEndX(() => {
-    //   if (event.clientX - 185 > s) {
-    //     console.log("clx " + event.clientX);
-    //     console.log("stx " + s);
-    //     return event.clientX - 185;
-    //   }
-    //   return event.clientX - 185;
-    // });
 
     const cursorX = event.clientX;
-    const cursorY = event.clientY;
 
     // Get the container's position on the screen
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -120,27 +95,16 @@ const SVGContainer = ({
 
     // Calculate the relative coordinates
     const relativeX = cursorX - containerX + scrollOffsetX;
-    const relativeY = cursorY - containerY;
 
-    // setEndX(relativeX);
-    // console.log(relativeX + " " + (event.clientX - 185));
-    // setEndX(event.clientX - 185);
     setEndX(relativeX);
     positionX = relativeX;
-    console.log(positionX);
     setEndY(y);
 
     const lastArrow = arrowsArray[arrowsArray.length - 1];
-    // console.log("lastArrow:", lastArrow);
 
     if (event.clientX > s) {
       lastArrow.endX = relativeX - 5;
-      // lastArrow.endX = event.clientX - 185;
     } else lastArrow.endX = relativeX + 10;
-    // } else lastArrow.endX = event.clientX - 165;
-
-    // lastArrow.endX = x
-    // lastArrow.endY = y
     const tempArray = arrowsArray;
     tempArray.pop();
     tempArray.push(lastArrow);
@@ -163,11 +127,8 @@ const SVGContainer = ({
     }
     if (st.length === 0) st = name;
     else en = name;
-    // console.log((clicks) % 2 === 0)
     clicks = clicks + 1;
-    // console.log(event.clientY)
     if (clicks % 2 !== 0) {
-      // setDragOnGoing(true);
       let newArr = arrowsArray;
       newArr.push({
         id: uuidv4(),
@@ -190,26 +151,8 @@ const SVGContainer = ({
       document.removeEventListener("mousemove", (e) =>
         handleMouseMove(e, clicks)
       );
-      // setEndX(positionX < startX ? positionX + 5 : positionX - 5);
-      // // setEndX(event.clientX - 185 < startX ? x + 5 : x - 5);
-      // console.log(st + " is now connected to " + en);
-      // // console.log(clicks)
-      // // setEndX(event.clientX);
-      // // setEndY(y);
       const lastArrow = arrowsArray[arrowsArray.length - 1];
-      // // console.log("lastArrow:", lastArrow);
-
-      // if (positionX > s) {
-      //   lastArrow.endX = positionX;
-      //   // lastArrow.endX = event.clientX - 185;
-      // } else {
-      //   lastArrow.endX = positionX;
-      //   console.log(positionX);
-      // }
-      // // } else lastArrow.endX = event.clientX - 175;
       lastArrow.to = en;
-      // // lastArrow.endX = x
-      // // lastArrow.endY = y
       const tempArray = arrowsArray;
       tempArray.pop();
       tempArray.push(lastArrow);
@@ -245,9 +188,7 @@ const SVGContainer = ({
               height="30"
               onClick={() => {
                 if (removeRectangle) {
-                  // handleRectangleRightClick(index);
                   const tempArray = arrowsArray;
-                  console.log(rectangle.id);
                   const arr = tempArray.filter(
                     (arrow) =>
                       arrow.to !== rectangle.id && arrow.from !== rectangle.id
@@ -313,28 +254,30 @@ const SVGContainer = ({
         {commentArray.map((comment, index) => {
           return (
             <g key={index}>
+              <defs>
+                <filter x="0" y="0" width="1.1" height="1" id="solid">
+                  <feFlood flood-color="yellow" />
+                  <feComposite in="SourceGraphic" operator="xor" />
+                </filter>
+              </defs>
+              <text
+                filter="url(#solid)"
+                x={comment.x}
+                y={comment.y}
+                style={{ fontSize: "0.7rem" }}>
+                {comment.value}
+              </text>
               <text
                 x={comment.x}
                 y={comment.y}
                 fill="black"
-                style={{ fontSize: "0.5rem" }}>
+                style={{ fontSize: "0.7rem" }}>
                 {comment.value}
               </text>
             </g>
           );
         })}
-        {/* <><line
-        x1={startX}
-        y1={startY}
-        x2={endX}
-        y2={endY}
-        stroke="black"
-        strokeWidth="1"
-      ></line>
-        
-      </> */}
         {arrowsArray?.map((arrow) => {
-          // console.log(arrow);
           return (
             <>
               <line
@@ -353,7 +296,6 @@ const SVGContainer = ({
                       x: (arrow.startX + arrow.endX) / 2,
                     });
                     commentArray.forEach((comment) => {
-                      console.log(comment);
                       if (comment.id === arrow.id) {
                         setNewComment(comment.value);
                       }
@@ -365,8 +307,6 @@ const SVGContainer = ({
                 stroke="black"
                 strokeWidth="1"></line>
               <polygon
-                // x={endX}
-                // y={endY}
                 points={`${arrow.endX},${arrow.endY + 5} ${arrow.endX},${
                   arrow.endY - 5
                 } ${
@@ -496,7 +436,6 @@ function MyVerticallyCenteredModal(props) {
         `http://localhost:3001/getMsgNameList?ptcl_id=${ptcl_id}`
       );
       const names = await namesResponse.json();
-      //console.log("The raw names are ", names);
       setMessageNames(names);
     } catch (error) {
       console.error("An error occurred while fetching namesResponse:", error);
@@ -592,23 +531,16 @@ function MyVerticallyCenteredModal(props) {
           </div>
         </div>
       </Modal.Body>
-      <Modal.Footer>
-        {/* <Button onClick={props.onHide}>Save</Button> */}
-      </Modal.Footer>
+      <Modal.Footer></Modal.Footer>
     </Modal>
   );
 }
 function Simulator() {
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [ptclID, setptclID] = useState(1);
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [arrowLocation, setArrowLocation] = useState(null);
   const [arrowsArray, setArrowsArray] = useState([]);
 
-  // console.log(document.getElementById("main").className);
   document.getElementById("main").classList.remove("auth");
   document.getElementById("main").classList.add("simulator");
-  // console.log(document.getElementById("main").className);
 
   const [startX, setStartX] = useState(null);
   const [startY, setStartY] = useState(null);
@@ -636,7 +568,6 @@ function Simulator() {
       event.dataTransfer.setData("text/plain", item);
     }
     if (item !== "SUT" && currentObjectType.length === 0) {
-      console.log("first");
       return;
     }
 
@@ -757,48 +688,6 @@ function Simulator() {
       </div>
     </>
   );
-  // const handleDragOver = (event) => {
-  //   event.preventDefault();
-  // };
-
-  // const handleClick = (event) => {
-  //   const word = event.dataTransfer.getData("text/plain");
-  // };
-
-  // const handleDrop = (event, rowIndex, columnIndex) => {
-  //   event.preventDefault();
-  //   const item2 = event.dataTransfer.getData("text/plain");
-  //   const item = (
-  //     <div>
-  //       <div
-  //         style={{
-  //           height: "1.2rem",
-  //           backgroundColor: "#ff000d75",
-  //           paddingRight: "1rem",
-  //         }}>
-  //         <h6 align="center">{item2}</h6>
-  //       </div>
-  //     </div>
-  //   );
-
-  //   const newTableCells = [...tableCells];
-  //   newTableCells[rowIndex][columnIndex] = item;
-  //   for (let i = rowIndex + 1; i < 30; i++) {
-  //     const item3 = (
-  //       <div
-  //         style={{
-  //           height: "100%",
-  //           width: "2px",
-  //           backgroundColor: "#ff000d75",
-  //           marginLeft: "auto",
-  //           marginRight: "auto",
-  //         }}></div>
-  //     );
-  //     newTableCells[i][columnIndex] = item3;
-  //     setTableCells(newTableCells);
-  //   }
-  //   setTableCells(newTableCells);
-  // };
   const { show } = useContextMenu({
     id: "MENU_ID",
   });
@@ -822,9 +711,6 @@ function Simulator() {
           commentArray={commentArray}
           timerArray={timerArray}
         />
-        {/* <Workspace/> */}
-
-        {/* <Sidebar /> */}
         <div className="d-flex flex-column">
           <div
             className="d-flex pb-2 pt-1"
@@ -1010,77 +896,6 @@ function Simulator() {
             />
             {showTimerModal && timerModal}
             {showCommentModal && commentModal}
-            {/* <div
-              style={{
-                flex: 1,
-                overflowX: "scroll",
-                overflowY: "scroll",
-              }}
-            >
-              <table
-                style={{ height: "100%", width: "250vw", tableLayout: "fixed" }}
-              >
-                <tbody>
-                  {tableCells.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {row.map((cell, columnIndex) => (
-                        <td
-                          key={columnIndex}
-                          className="cell"
-                          style={{
-                            width: "100px",
-                            cursor: "pointer",
-                            fontSize: "0.7rem",
-                          }}
-                          onDragOver={handleDragOver}
-                          onClick={() => {
-                            const newTableCells = [...tableCells];
-                            console.log(newTableCells[rowIndex][columnIndex]);
-                            if (
-                              !newTableCells[rowIndex][columnIndex]?.props?.style
-                            ) {
-                              newTableCells[rowIndex][columnIndex] = "";
-                              setTableCells(newTableCells);
-                              for (let i = rowIndex + 1; i < 30; i++) {
-                                const item3 = "";
-                                newTableCells[i][columnIndex] = item3;
-                                setTableCells(newTableCells);
-                              }
-                            }
-
-                            // Arrow generation
-                            if(!arrowLocation){
-                              setArrowLocation({
-                                start:{
-                                  row: rowIndex,
-                                  column: columnIndex,
-                                }
-                              })
-                              console.log("the arrow begins at"+rowIndex+" "+columnIndex)
-                            }else{
-                              setArrowLocation({
-                                ...arrowLocation,
-                                end: {
-                                  row: arrowLocation.start.row,
-                                  column: columnIndex,
-                                }
-                              })
-                              console.log("the arrow ends at"+arrowLocation.start.row+" "+columnIndex)
-                            }
-                              
-                          }}
-                          onDrop={(event) =>
-                            handleDrop(event, rowIndex, columnIndex)
-                          }
-                        >
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div> */}
             <FileTree />
           </div>
           <BottomBar />
